@@ -9,6 +9,11 @@ progresión**, dividida en:
 
 ---
 
+> **Obligatorio antes de tocar textos o interfaces:** lee
+> [`docs/Localizacion.md`](Localizacion.md). Todo texto visible nuevo se registra
+> con un **ID** y `TextLocalizer`; no se escribe texto suelto. La misma regla
+> aplica a cualquier instrucción o pantalla nueva.
+
 ## Modos de juego
 
 ### 1. Zombi
@@ -58,6 +63,10 @@ armas y diferentes cosas.
    (no se rehace); los textos se ajustan después.
 4. **Edición manual en el editor + MCP:** el diseño se edita a mano en Unity; el
    MCP (`unity`) se usa para conectar, generar y verificar.
+5. **Textos localizados:** ningún texto visible se escribe suelto. Todo texto
+   nuevo lleva ID + `TextLocalizer`, con su clave en `en.json` y `es.json`, según
+   [`docs/Localizacion.md`](Localizacion.md). Al documentar o agregar una
+   instrucción/pantalla nueva se sigue ese mismo documento.
 
 ---
 
@@ -418,11 +427,15 @@ por defecto: hay que reaplicar estos colores después.
 - **Inspección de variables:** exponer las propiedades de ajuste
   (`[SerializeField]` en Unity) en los scripts para que sean editables desde la
   interfaz gráfica sin modificar el código.
+- **Textos:** todo texto visible usa ID + `TextLocalizer` y vive en
+  `en.json` / `es.json` ([`docs/Localizacion.md`](Localizacion.md)). Prohibido
+  dejar cadenas visibles hardcodeadas.
 
 ---
 
-## Documentación de modos
+## Documentación
 
+- [Localización / idiomas](Localizacion.md) — obligatorio para todo texto nuevo
 - [Modo Zombi](Modo-Zombi.md)
 - [Modo Shooter](Modo-Shooter.md)
 - [Modo Aventura](Modo-Aventura.md)
