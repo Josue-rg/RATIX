@@ -152,6 +152,31 @@ modal.gameObject.SetActive(false);
    (`SetAsLastSibling`)?
 8. ¿Escena guardada?
 
+### 6. Assets pesados, Git LFS y archivos locales
+
+**Estado actual:** el repositorio guarda **todo como archivo normal de Git**.
+Git LFS está **desactivado** en `.gitattributes` porque la cuenta superó su
+presupuesto de LFS y GitHub rechazaba cada `push` con *"This repository exceeded
+its LFS budget"*. El proyecto pesa ~8 MB, así que todavía no lo necesita.
+
+**Límites de GitHub:**
+- Archivos de **más de 50 MB**: GitHub avisa (el repo se hincha para siempre).
+- Archivos de **más de 100 MB**: GitHub los **bloquea** y el push falla.
+
+**Antes de importar mapas, personajes o packs de texturas pesados:**
+1. Si el archivo supera ~50 MB, **no** lo subas al repo: guárdalo fuera
+   (Drive / almacenamiento externo) y anótalo en el README del modo.
+2. Si se quiere versionar: arreglar el presupuesto en
+   **GitHub → Settings → Billing → Git LFS**, descomentar en `.gitattributes`
+   solo las extensiones necesarias y traer los archivos con
+   `git lfs migrate import --include="*.fbx,*.blend"`.
+3. Flujo recomendado de modelado: trabajar el `.blend` fuera del repo y subir
+   solo el `.fbx` exportado y liviano dentro de `Assets/`.
+
+**Capturas y temporales:** `/Screenshots/` está en `.gitignore`; las capturas de
+trabajo nunca se suben. `Library/`, `Temp/`, `Logs/` y `obj/` también quedan
+fuera del control de versiones.
+
 ---
 
 ## Instrucción de arquitectura para el motor
