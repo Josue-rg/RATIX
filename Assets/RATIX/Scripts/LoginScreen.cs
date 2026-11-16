@@ -95,7 +95,7 @@ namespace RATIX
 
             if (string.IsNullOrEmpty(user))
             {
-                SetError("Escribe tu usuario para continuar.");
+                SetError("Enter your username to continue.");
                 return;
             }
 

@@ -129,6 +129,14 @@ namespace RATIX
                 case "Lupa": return "SearchIcon";
                 case "search0": return "SearchLabel";
                 case "search1": return "SearchPlaceholder";
+                case "Cuchillo": return "Knife";
+                case "Escopeta": return "Shotgun";
+                case "Francotirador": return "Sniper";
+                case "Metralladora": return "MachineGun";
+                case "Pistola": return "Pistol";
+                case "SubMetralladora": return "SubmachineGun";
+                case "Tactica": return "Tactical";
+                case "Todos": return "AllTypes";
             }
             return null;
         }
@@ -236,6 +244,25 @@ namespace RATIX
             { "Zombi 3", "Zombie 3" },
             { "Zombi Normal", "Normal Zombie" },
             { "VIP10", "VIP10" },
+
+            // Pasada 2: textos que quedaban en español.
+            { "Cuchillo", "Knife" },
+            { "Escopeta", "Shotgun" },
+            { "Francotirador", "Sniper" },
+            { "Metralladora", "Machine Gun" },
+            { "Pistola", "Pistol" },
+            { "SubMetralladora", "Submachine Gun" },
+            { "Tactica", "Tactical" },
+            { "Todos", "All" },
+            { "SEGUIR", "FOLLOW" },
+            { "gg, otra?", "gg, again?" },
+            { "dale, una mas y corto", "fine, one more and I'm out" },
+            { "entra a la room 1, hay 8", "join room 1, there are 8" },
+            { "ya voy", "on my way" },
+            { "Has recibido 0ro(200) X10", "You have received 200 gold x10" },
+            { "Imagen del arma", "Weapon image" },
+            { "ZombieShooter/Adventura", "Zombie / Shooter / Adventure" },
+            { "CHAT · posición en juego (mueve este recuadro)", "CHAT · runtime position (move this box)" },
         };
     }
 }
