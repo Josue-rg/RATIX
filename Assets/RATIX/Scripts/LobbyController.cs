@@ -38,6 +38,7 @@ namespace RATIX
         [SerializeField] private RectTransform profileModal;
         [SerializeField] private RectTransform agendaModal;
         [SerializeField] private RectTransform charactersPanel;
+        [SerializeField] private RectTransform friendsModal;
         [SerializeField] private RectTransform storePanel;
         [SerializeField] private RectTransform warehousePanel;
 
@@ -65,6 +66,10 @@ namespace RATIX
         [FormerlySerializedAs("ajustesButton")]
         [SerializeField] private Button settingsButton;
 
+        /// <summary>Pantalla de contenido activa y pila para que "Back" vuelva al origen.</summary>
+        private readonly System.Collections.Generic.List<RectTransform> contentHistory = new System.Collections.Generic.List<RectTransform>();
+        private RectTransform currentContent;
+
         private void Start()
         {
             ResolveMissingReferences();
@@ -81,6 +86,7 @@ namespace RATIX
             Wire(warehouseButton, OpenWarehouse);
             Wire(storeButton, OpenStore);
             Wire(settingsButton, OpenSettings);
+            Wire(FindButton("TopBar/Friends"), OpenFriends);
             Wire(FindButton("LeftColumn/BottomNav/Mail"), OpenMail);
             Wire(FindButton("LeftColumn/BottomNav/Schedule"), OpenAgenda);
             Wire(FindButton("LeftColumn/CharacterPanel/CharacterButton"), OpenCharacters);
@@ -100,21 +106,23 @@ namespace RATIX
             WireByPath(clanModal, "Window/CreatePanel/BackButton", ShowClanSearch);
             WireByPath(clanModal, "Window/InsidePanel/BackButton", ShowClanSearch);
 
-            // Back buttons inside each header.
-            WireByPath(zombieModeRect, "Header/Back", ShowModeSelect);
-            WireByPath(shooterModeRect, "Header/Back", ShowModeSelect);
-            WireByPath(adventureModeRect, "Header/Back", ShowModeSelect);
-            WireByPath(zombieHallRect, "Header/Back", BackToZombie);
-            WireByPath(shooterHallRect, "Header/Back", BackToShooter);
-            WireByPath(storePanel, "Header/Back", ShowModeSelect);
-            WireByPath(warehousePanel, "Header/Back", ShowModeSelect);
+            // Back buttons: vuelven a la pantalla donde estabas.
+            WireByPath(zombieModeRect, "Header/Back", GoBack);
+            WireByPath(shooterModeRect, "Header/Back", GoBack);
+            WireByPath(adventureModeRect, "Header/Back", GoBack);
+            WireByPath(zombieHallRect, "Header/Back", GoBack);
+            WireByPath(shooterHallRect, "Header/Back", GoBack);
+            WireByPath(storePanel, "Header/Back", GoBack);
+            WireByPath(warehousePanel, "Header/Back", GoBack);
             WireByPath(settingsModal, "Window/XButton", CloseSettings);
             WireByPath(profileModal, "Window/XButton", CloseProfile);
             WireByPath(profileModal, "Window/CloseButton", CloseProfile);
             WireByPath(profileModal, "Window/ChangeCharacterButton", OpenCharacters);
             WireByPath(agendaModal, "Window/XButton", CloseAgenda);
             WireByPath(agendaModal, "Window/CloseButton", CloseAgenda);
-            WireByPath(charactersPanel, "Header/Back", ShowModeSelect);
+            WireByPath(charactersPanel, "Header/Back", GoBack);
+            WireByPath(friendsModal, "Window/XButton", CloseFriends);
+            WireByPath(friendsModal, "Window/Chat/Header/RoomCard/Follow", OpenFriendsRoom);
 
             // Room click -> Hall.
             for (int i = 0; i < 7; i++)
@@ -151,6 +159,7 @@ namespace RATIX
             if (profileModal != null) profileModal.gameObject.SetActive(false);
             if (agendaModal != null) agendaModal.gameObject.SetActive(false);
             if (charactersPanel != null) charactersPanel.gameObject.SetActive(false);
+            if (friendsModal != null) friendsModal.gameObject.SetActive(false);
 
             ShowModeSelect();
         }
@@ -181,6 +190,7 @@ namespace RATIX
             if (profileModal == null) profileModal = FindRect("ProfileModal");
             if (agendaModal == null) agendaModal = FindRect("AgendaModal");
             if (charactersPanel == null) charactersPanel = FindRect("Content/CharactersPanel");
+            if (friendsModal == null) friendsModal = FindRect("FriendsModal");
             if (storePanel == null) storePanel = FindRect("Content/StoreModelPanel") ?? FindRect("Content/StoreModalPanel");
             if (warehousePanel == null) warehousePanel = FindRect("Content/WarehouseModelPanel") ?? FindRect("Content/WarehouseModalPanel");
         }
@@ -238,8 +248,17 @@ namespace RATIX
         public void BackToShooter() => ShowContent(shooterModeRect);
         public void ShowModeSelect() => ShowContent(modeSelectRect);
 
-        private void ShowContent(RectTransform active)
+        private void ShowContent(RectTransform active) => ShowContent(active, true);
+
+        private void ShowContent(RectTransform active, bool remember)
         {
+            if (active == null) return;
+
+            // Guarda de dónde vienes para que "Back" te devuelva ahí y no al selector.
+            if (remember && currentContent != null && currentContent != active)
+                contentHistory.Add(currentContent);
+            currentContent = active;
+
             if (modeSelectRect != null) modeSelectRect.gameObject.SetActive(active == modeSelectRect);
             if (zombieModeRect != null) zombieModeRect.gameObject.SetActive(active == zombieModeRect);
             if (shooterModeRect != null) shooterModeRect.gameObject.SetActive(active == shooterModeRect);
@@ -249,6 +268,22 @@ namespace RATIX
             if (storePanel != null) storePanel.gameObject.SetActive(active == storePanel);
             if (warehousePanel != null) warehousePanel.gameObject.SetActive(active == warehousePanel);
             if (charactersPanel != null) charactersPanel.gameObject.SetActive(active == charactersPanel);
+        }
+
+        /// <summary>Vuelve a la pantalla anterior (modo o sala); si no hay historial, al selector.</summary>
+        public void GoBack()
+        {
+            while (contentHistory.Count > 0)
+            {
+                var previous = contentHistory[contentHistory.Count - 1];
+                contentHistory.RemoveAt(contentHistory.Count - 1);
+                if (previous == null) continue;
+
+                ShowContent(previous, false);
+                return;
+            }
+
+            ShowContent(modeSelectRect, false);
         }
 
         // ==== Modals ====
@@ -328,6 +363,24 @@ namespace RATIX
             CloseAgenda();
             if (charactersPanel != null) charactersPanel.anchoredPosition = viewPosition;
             ShowContent(charactersPanel);
+        }
+
+        // ==== Friends ====
+
+        public void OpenFriends()
+        {
+            CloseProfile();
+            CloseAgenda();
+            OpenModal(friendsModal);
+        }
+
+        public void CloseFriends() => CloseModal(friendsModal);
+
+        /// <summary>Temporal: "seguir" a un amigo lleva a la sala de ejemplo (hall).</summary>
+        public void OpenFriendsRoom()
+        {
+            CloseFriends();
+            ShowContent(zombieHallRect);
         }
 
         public void OpenStore() => ShowContent(storePanel);

@@ -166,6 +166,7 @@ Canvas de referencia 1920 × 1080, ancla y pivot `0,0`:
 | `LeaderboardModal` | `0, 1120` |
 | `KickModal` | `2006, 2109` |
 | `InviteModal` | `2006, 3280` |
+| `FriendsModal` | `2006, 0` |
 | `MailModal` | `0, −421.88` (se abre en `0, 77`) |
 | `ZombieModePanel` | `1546, 0` |
 | `ShooterModePanel` | `3557, 0` |
@@ -182,13 +183,20 @@ Qué abre cada cosa:
 |---|---|
 | Clic en `LeftColumn/PlayerCard` | `ProfileModal` |
 | `LeftColumn/BottomNav/Schedule` | `AgendaModal` |
+| `LeftColumn/BottomNav/Settings` | `SettingsModal` |
+| `TopBar/Friends` | `FriendsModal` (lista + chat; `SEGUIR` lleva al hall) |
 | `LeftColumn/CharacterPanel/CharacterButton` | `CharactersPanel` |
 | `ProfileModal > CHANGE CHARACTER` | `CharactersPanel` |
-| `CharactersPanel > Header/Back` | `ModeSelectPanel` |
+| `CharactersPanel > Header/Back` | pantalla anterior |
 
 Los paneles de contenido se reposicionan a la vista en `Start()` (array `panels`)
 y `ShowContent()` alterna su visibilidad; los modales se abren con `OpenModal()`
 (posición cero + `SetAsLastSibling`).
+
+**"Back" recuerda de dónde vienes:** `ShowContent()` guarda la pantalla actual en
+una pila (`contentHistory`) y `GoBack()` la restaura. Por eso, si estás dentro de
+una sala o de un modo y te vas a Tienda o Almacén, el **Back** te devuelve a esa
+sala / modo y no al selector. Todos los botones `Header/Back` llaman a `GoBack()`.
 
 #### 5.5 Runtime: así se junta el flujo
 
