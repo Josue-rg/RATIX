@@ -179,6 +179,49 @@ fuera del control de versiones.
 
 ---
 
+## Paletas por modo
+
+El armazón del lobby (fondo, `TopBar`, `LeftColumn`) se mantiene neutral; el color
+identifica a cada modo. Los elementos de acento usan siempre el color de acento y
+su texto va **oscuro**, nunca blanco.
+
+### Zombi
+
+| Rol | Color |
+|---|---|
+| Fondo de panel | `#232824` |
+| Superficies, tarjetas y filas | `#568259` (Fern) mezclado sobre el fondo |
+| Acento: barra, pestaña activa, JOIN/Create/Enter, anillos | `#96e6b3` |
+| Texto principal | `#f1fffa` |
+| Texto secundario | `#a9c6ac` |
+| Texto sobre acento | `#232824` |
+
+Paleta de origen: `#f1fffa` Mint Cream · `#ccfccb` Tea Green · `#96e6b3` Celadon ·
+`#568259` Fern · `#464e47` Iron Grey.
+
+### Shooter
+
+| Rol | Color |
+|---|---|
+| Fondo de panel | `#03045e` |
+| Superficies, tarjetas y filas | `#0077b6` mezclado sobre el fondo |
+| Acento: barra, pestaña activa, JOIN/Create/Enter, anillos | `#48cae4` |
+| Texto principal | `#caf0f8` |
+| Texto secundario | `#82afce` |
+| Texto sobre acento | `#03045e` |
+
+Paleta de origen: `#03045e` Deep Twilight · `#023e8a` French Blue · `#0077b6`
+Bright Teal Blue · `#0096c7` Blue Green · `#00b4d8` Turquoise Surf · `#48cae4`
+Sky Aqua · `#90e0ef` Frosted Blue · `#ade8f4` Frosted Blue 2 · `#caf0f8` Light Cyan.
+
+**Dónde se aplican:** `Content/ModeSelectPanel/ZombieButton`, `ShooterButton`,
+`Content/ZombieModePanel`, `Content/ShooterModePanel`,
+`Content/ZombieHallModelPanel` y `Content/ShooterHallModelPanel`. Si se re-ejecuta
+`RATIXUITheme` (tema del editor), vuelve a pintar con la paleta azul por defecto:
+hay que reaplicar estos colores después.
+
+---
+
 ## Instrucción de arquitectura para el motor
 
 - **Prohibido el diseño 100 % dinámico:** no crear menús, niveles o entidades
