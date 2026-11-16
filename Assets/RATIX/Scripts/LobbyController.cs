@@ -1,0 +1,319 @@
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+
+namespace RATIX
+{
+    /// <summary>
+    /// Lobby navigation: mode panels are authored at different positions in the
+    /// canvas (like Figma frames) and are repositioned at runtime. Floating modals
+    /// (Clan, Leaderboard, Events) open on top and close with the X button.
+    /// </summary>
+    public class LobbyController : MonoBehaviour
+    {
+        [Header("Panels (dispersed; repositioned at runtime)")]
+        [SerializeField] private RectTransform modeSelectRect;
+        [FormerlySerializedAs("zombiModeRect")]
+        [SerializeField] private RectTransform zombieModeRect;
+        [SerializeField] private RectTransform shooterModeRect;
+        [FormerlySerializedAs("aventuraModeRect")]
+        [SerializeField] private RectTransform adventureModeRect;
+        [FormerlySerializedAs("hallZombiRect")]
+        [SerializeField] private RectTransform zombieHallRect;
+        [FormerlySerializedAs("hallShuterRect")]
+        [SerializeField] private RectTransform shooterHallRect;
+        [SerializeField] private Vector2 viewPosition = Vector2.zero;
+
+        [Header("Modals")]
+        [SerializeField] private RectTransform clanModal;
+        [FormerlySerializedAs("clasificacionModal")]
+        [SerializeField] private RectTransform leaderboardModal;
+        [SerializeField] private RectTransform eventsModal;
+        [SerializeField] private HallActionModal kickModal;
+        [SerializeField] private HallActionModal inviteModal;
+
+        [Header("More windows")]
+        [SerializeField] private RectTransform settingsModal;
+        [SerializeField] private RectTransform mailModal;
+        [SerializeField] private RectTransform storePanel;
+        [SerializeField] private RectTransform warehousePanel;
+
+        [Header("Clan sub-panels")]
+        [SerializeField] private GameObject clanSearchPanel;
+        [SerializeField] private GameObject clanCreatePanel;
+        [SerializeField] private GameObject clanInsidePanel;
+
+        [Header("Mode buttons (selector)")]
+        [FormerlySerializedAs("zombiButton")]
+        [SerializeField] private Button zombieButton;
+        [SerializeField] private Button shooterButton;
+        [FormerlySerializedAs("aventuraButton")]
+        [SerializeField] private Button adventureButton;
+
+        [Header("Shell")]
+        [SerializeField] private Button clanButton;
+        [FormerlySerializedAs("clasificacionButton")]
+        [SerializeField] private Button leaderboardButton;
+        [SerializeField] private Button eventsButton;
+        [FormerlySerializedAs("almacenButton")]
+        [SerializeField] private Button warehouseButton;
+        [FormerlySerializedAs("tiendaButton")]
+        [SerializeField] private Button storeButton;
+        [FormerlySerializedAs("ajustesButton")]
+        [SerializeField] private Button settingsButton;
+
+        private void Start()
+        {
+            ResolveMissingReferences();
+
+            // Mode selection.
+            Wire(zombieButton, EnterZombie);
+            Wire(shooterButton, EnterShooter);
+            Wire(adventureButton, EnterAdventure);
+
+            // Modals.
+            Wire(clanButton, OpenClan);
+            Wire(leaderboardButton, OpenLeaderboard);
+            Wire(eventsButton, OpenEvents);
+            Wire(warehouseButton, OpenWarehouse);
+            Wire(storeButton, OpenStore);
+            Wire(settingsButton, OpenSettings);
+            Wire(FindButton("LeftColumn/BottomNav/Mail"), OpenMail);
+
+            // Close modals (X).
+            WireByPath(clanModal, "Window/XButton", CloseClan);
+            WireByPath(leaderboardModal, "Window/XButton", CloseLeaderboard);
+            WireByPath(eventsModal, "Window/XButton", CloseEvents);
+            WireByPath(eventsModal, "Window/Close", CloseEvents);
+
+            // Clan states.
+            WireByPath(clanModal, "Window/SearchPanel/CreateClanButton", ShowClanCreate);
+            WireByPath(clanModal, "Window/CreatePanel/CreateButton", ShowClanInside);
+            WireByPath(clanModal, "Window/CreatePanel/BackButton", ShowClanSearch);
+            WireByPath(clanModal, "Window/InsidePanel/BackButton", ShowClanSearch);
+
+            // Back buttons inside each header.
+            WireByPath(zombieModeRect, "Header/Back", ShowModeSelect);
+            WireByPath(shooterModeRect, "Header/Back", ShowModeSelect);
+            WireByPath(adventureModeRect, "Header/Back", ShowModeSelect);
+            WireByPath(zombieHallRect, "Header/Back", BackToZombie);
+            WireByPath(shooterHallRect, "Header/Back", BackToShooter);
+            WireByPath(storePanel, "Header/Back", ShowModeSelect);
+            WireByPath(warehousePanel, "Header/Back", ShowModeSelect);
+            WireByPath(settingsModal, "Window/XButton", CloseSettings);
+
+            // Room click -> Hall.
+            for (int i = 0; i < 7; i++)
+            {
+                WireByPath(zombieModeRect, "RoomList/Room" + i, EnterZombieHall);
+                WireByPath(shooterModeRect, "RoomList/Room" + i, EnterShooterHall);
+            }
+
+            // Room list refresh.
+            WireByPath(zombieModeRect, "RoomList/Search/Refresh", RefreshRooms);
+            WireByPath(shooterModeRect, "RoomList/Search/Refresh", RefreshRooms);
+
+            // Hall actions.
+            WireByPath(zombieHallRect, "RoomList/ActionBar/Kick", OpenKick);
+            WireByPath(zombieHallRect, "RoomList/ActionBar/Invite", OpenInvite);
+            WireByPath(zombieHallRect, "RoomList/ActionBar/EnterRoom", EnterMatch);
+            WireByPath(shooterHallRect, "RoomList/ActionBar/Kick", OpenKick);
+            WireByPath(shooterHallRect, "RoomList/ActionBar/Invite", OpenInvite);
+            WireByPath(shooterHallRect, "RoomList/ActionBar/EnterRoom", EnterMatch);
+
+            // Reposition dispersed panels.
+            var panels = new[] { modeSelectRect, zombieModeRect, shooterModeRect, adventureModeRect, zombieHallRect, shooterHallRect, storePanel, warehousePanel };
+            foreach (var p in panels)
+                if (p != null) p.anchoredPosition = viewPosition;
+
+            // Modals always start closed, even if left open in the editor.
+            CloseModal(clanModal);
+            CloseModal(leaderboardModal);
+            CloseModal(eventsModal);
+            if (kickModal != null) kickModal.Close();
+            if (inviteModal != null) inviteModal.Close();
+            if (settingsModal != null) settingsModal.gameObject.SetActive(false);
+            if (mailModal != null) mailModal.gameObject.SetActive(false);
+
+            ShowModeSelect();
+        }
+
+        /// <summary>
+        /// Recovers inspector references that were lost while the UI was cloned.
+        /// </summary>
+        private void ResolveMissingReferences()
+        {
+            zombieButton ??= FindButton("Content/ModeSelectPanel/ZombieButton");
+            shooterButton ??= FindButton("Content/ModeSelectPanel/ShooterButton");
+            adventureButton ??= FindButton("Content/ModeSelectPanel/AdventureButton");
+
+            clanButton ??= FindButton("TopBar/Clan");
+            leaderboardButton ??= FindButton("TopBar/Leaderboard");
+            eventsButton ??= FindButton("TopBar/Events");
+            warehouseButton ??= FindButton("TopBar/Warehouse");
+            storeButton ??= FindButton("TopBar/Store");
+            settingsButton ??= FindButton("LeftColumn/BottomNav/Settings");
+
+            if (clanModal == null) clanModal = FindRect("ClanModal");
+            if (leaderboardModal == null) leaderboardModal = FindRect("LeaderboardModal");
+            if (eventsModal == null) eventsModal = FindRect("EventsModal");
+            if (kickModal == null) kickModal = FindComponent<HallActionModal>("KickModal");
+            if (inviteModal == null) inviteModal = FindComponent<HallActionModal>("InviteModal");
+            if (settingsModal == null) settingsModal = FindRect("SettingsModal");
+            if (mailModal == null) mailModal = FindRect("MailModal");
+            if (storePanel == null) storePanel = FindRect("Content/StoreModelPanel") ?? FindRect("Content/StoreModalPanel");
+            if (warehousePanel == null) warehousePanel = FindRect("Content/WarehouseModelPanel") ?? FindRect("Content/WarehouseModalPanel");
+        }
+
+        private T FindComponent<T>(string path) where T : Component
+        {
+            var t = transform.Find(path);
+            return t != null ? t.GetComponent<T>() : null;
+        }
+
+        private Button FindButton(string path)
+        {
+            var t = transform.Find(path);
+            return t != null ? t.GetComponent<Button>() : null;
+        }
+
+        private RectTransform FindRect(string path)
+        {
+            var t = transform.Find(path);
+            return t as RectTransform;
+        }
+
+        private void Wire(Button button, UnityEngine.Events.UnityAction action)
+        {
+            if (button != null) button.onClick.AddListener(action);
+        }
+
+        private void WireByPath(RectTransform panel, string path, UnityEngine.Events.UnityAction action)
+        {
+            if (panel == null) return;
+            var t = panel.Find(path);
+            if (t == null) return;
+            var btn = t.GetComponent<Button>();
+            if (btn == null)
+            {
+                btn = t.gameObject.AddComponent<Button>();
+                var img = t.GetComponent<Image>();
+                if (img != null) btn.targetGraphic = img;
+                foreach (var g in t.GetComponentsInChildren<Graphic>(true))
+                    if (g.transform != t) g.raycastTarget = false;
+            }
+            btn.onClick.AddListener(action);
+        }
+
+        private void Log(string message) => Debug.Log("[RATIX] " + message);
+
+        // ==== Panel navigation ====
+
+        public void EnterZombie() => ShowContent(zombieModeRect);
+        public void EnterShooter() => ShowContent(shooterModeRect);
+        public void EnterAdventure() => ShowContent(adventureModeRect);
+        public void EnterZombieHall() => ShowContent(zombieHallRect);
+        public void EnterShooterHall() => ShowContent(shooterHallRect);
+        public void BackToZombie() => ShowContent(zombieModeRect);
+        public void BackToShooter() => ShowContent(shooterModeRect);
+        public void ShowModeSelect() => ShowContent(modeSelectRect);
+
+        private void ShowContent(RectTransform active)
+        {
+            if (modeSelectRect != null) modeSelectRect.gameObject.SetActive(active == modeSelectRect);
+            if (zombieModeRect != null) zombieModeRect.gameObject.SetActive(active == zombieModeRect);
+            if (shooterModeRect != null) shooterModeRect.gameObject.SetActive(active == shooterModeRect);
+            if (adventureModeRect != null) adventureModeRect.gameObject.SetActive(active == adventureModeRect);
+            if (zombieHallRect != null) zombieHallRect.gameObject.SetActive(active == zombieHallRect);
+            if (shooterHallRect != null) shooterHallRect.gameObject.SetActive(active == shooterHallRect);
+            if (storePanel != null) storePanel.gameObject.SetActive(active == storePanel);
+            if (warehousePanel != null) warehousePanel.gameObject.SetActive(active == warehousePanel);
+        }
+
+        // ==== Modals ====
+
+        public void OpenClan()
+        {
+            ShowClanSearch();
+            OpenModal(clanModal);
+        }
+
+        public void OpenLeaderboard() => OpenModal(leaderboardModal);
+        public void OpenEvents() => OpenModal(eventsModal);
+
+        public void OpenKick()
+        {
+            if (kickModal != null) kickModal.Open();
+        }
+
+        public void OpenInvite()
+        {
+            if (inviteModal != null) inviteModal.Open();
+        }
+
+        public void EnterMatch() => Log("Starting match... (gameplay scene not implemented yet)");
+
+        public void RefreshRooms() => Log("Refreshing room list...");
+
+        // ==== Extra windows ====
+
+        public void OpenSettings()
+        {
+            if (settingsModal == null) return;
+            settingsModal.anchoredPosition = Vector2.zero;
+            settingsModal.gameObject.SetActive(true);
+            settingsModal.SetAsLastSibling();
+        }
+
+        public void CloseSettings()
+        {
+            if (settingsModal != null) settingsModal.gameObject.SetActive(false);
+        }
+
+        public void OpenMail()
+        {
+            if (mailModal == null) return;
+            mailModal.anchoredPosition = new Vector2(0f, 77f);
+            mailModal.gameObject.SetActive(true);
+            mailModal.SetAsLastSibling();
+        }
+
+        public void CloseMail()
+        {
+            if (mailModal != null) mailModal.gameObject.SetActive(false);
+        }
+
+        public void OpenStore() => ShowContent(storePanel);
+        public void OpenWarehouse() => ShowContent(warehousePanel);
+
+        public void CloseClan() => CloseModal(clanModal);
+        public void CloseLeaderboard() => CloseModal(leaderboardModal);
+        public void CloseEvents() => CloseModal(eventsModal);
+
+        private void OpenModal(RectTransform modal)
+        {
+            if (modal == null) return;
+            modal.anchoredPosition = Vector2.zero;
+            modal.gameObject.SetActive(true);
+            modal.SetAsLastSibling(); // keep it above everything else
+        }
+
+        private void CloseModal(RectTransform modal)
+        {
+            if (modal != null) modal.gameObject.SetActive(false);
+        }
+
+        // ==== Clan states ====
+
+        public void ShowClanSearch() => SetClanPanel(clanSearchPanel);
+        public void ShowClanCreate() => SetClanPanel(clanCreatePanel);
+        public void ShowClanInside() => SetClanPanel(clanInsidePanel);
+
+        private void SetClanPanel(GameObject active)
+        {
+            if (clanSearchPanel != null) clanSearchPanel.SetActive(active == clanSearchPanel);
+            if (clanCreatePanel != null) clanCreatePanel.SetActive(active == clanCreatePanel);
+            if (clanInsidePanel != null) clanInsidePanel.SetActive(active == clanInsidePanel);
+        }
+    }
+}
