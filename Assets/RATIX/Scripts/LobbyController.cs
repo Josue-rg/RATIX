@@ -41,6 +41,7 @@ namespace RATIX
         [SerializeField] private RectTransform friendsModal;
         [SerializeField] private RectTransform storePanel;
         [SerializeField] private RectTransform warehousePanel;
+        [SerializeField] private InviteReceivedModal inviteReceivedModal;
 
         [Header("Clan sub-panels")]
         [SerializeField] private GameObject clanSearchPanel;
@@ -160,6 +161,7 @@ namespace RATIX
             if (agendaModal != null) agendaModal.gameObject.SetActive(false);
             if (charactersPanel != null) charactersPanel.gameObject.SetActive(false);
             if (friendsModal != null) friendsModal.gameObject.SetActive(false);
+            if (inviteReceivedModal != null) inviteReceivedModal.Close();
 
             ShowModeSelect();
         }
@@ -193,6 +195,7 @@ namespace RATIX
             if (friendsModal == null) friendsModal = FindRect("FriendsModal");
             if (storePanel == null) storePanel = FindRect("Content/StoreModelPanel") ?? FindRect("Content/StoreModalPanel");
             if (warehousePanel == null) warehousePanel = FindRect("Content/WarehouseModelPanel") ?? FindRect("Content/WarehouseModalPanel");
+            if (inviteReceivedModal == null) inviteReceivedModal = FindComponent<InviteReceivedModal>("InviteReceivedModal");
         }
 
         private T FindComponent<T>(string path) where T : Component
@@ -308,6 +311,16 @@ namespace RATIX
         }
 
         public void EnterMatch() => Log("Starting match... (gameplay scene not implemented yet)");
+
+        /// <summary>
+        /// Muestra el popup de invitación recibida (misma posición que el correo).
+        /// Lo llamará el sistema de red cuando otro jugador invite.
+        /// </summary>
+        public void OpenInviteReceived(string inviter, string mode, string room, string map)
+        {
+            if (inviteReceivedModal == null) inviteReceivedModal = FindComponent<InviteReceivedModal>("InviteReceivedModal");
+            if (inviteReceivedModal != null) inviteReceivedModal.Open(inviter, mode, room, map);
+        }
 
         public void RefreshRooms() => Log("Refreshing room list...");
 

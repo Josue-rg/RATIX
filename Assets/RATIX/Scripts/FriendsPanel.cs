@@ -18,7 +18,10 @@ namespace RATIX
         [SerializeField] private TMP_Text chatRoom;
 
         [Tooltip("Posición donde el chat se coloca al abrirse (dentro del panel derecho).")]
-        [SerializeField] private Vector2 chatHome = new Vector2(484f, 24f);
+        [SerializeField] private Vector2 chatHome = new Vector2(324f, 36f);
+
+        [Tooltip("Recuadro guía del editor que marca dónde aparece el chat en Play. Si está asignado, manda su posición.")]
+        [SerializeField] private RectTransform chatGuide;
 
         private bool _wired;
         private RectTransform _chatRect;
@@ -48,6 +51,13 @@ namespace RATIX
             if (chatStatus == null) chatStatus = FindText("Window/Chat/Header/Status");
             if (chatRoom == null) chatRoom = FindText("Window/Chat/Header/RoomCard/Title");
             if (_chatRect == null && chatState != null) _chatRect = chatState.transform as RectTransform;
+
+            // Recuadro guía del editor: marca la posición de llegada del chat.
+            if (chatGuide == null)
+            {
+                var guide = transform.Find("Window/ChatGuide");
+                if (guide != null) chatGuide = guide as RectTransform;
+            }
         }
 
         private TMP_Text FindText(string path)
@@ -81,6 +91,8 @@ namespace RATIX
             if (chatState != null) chatState.SetActive(true);
 
             // El chat se edita estacionado fuera del modal; al abrirse vuelve a su sitio.
+            // La guía del editor (si existe) es la que manda: se puede mover a mano.
+            if (chatGuide != null) chatHome = chatGuide.anchoredPosition;
             if (_chatRect != null) _chatRect.anchoredPosition = chatHome;
 
             if (chatName != null) chatName.text = Read(row, "Name", "Player");

@@ -66,7 +66,8 @@ namespace RATIX
 
         private void Select(Button row)
         {
-            if (_selected != null) Paint(_selected, false);
+            // Solo una fila seleccionada: se repinta todo antes de marcar la nueva.
+            RepaintAll();
             _selected = row;
             Paint(row, true);
 
@@ -80,9 +81,14 @@ namespace RATIX
         private void ClearSelection()
         {
             _selected = null;
+            RepaintAll();
+            if (selectedLabel != null) selectedLabel.text = "Selected: none";
+        }
+
+        private void RepaintAll()
+        {
             foreach (var b in GetComponentsInChildren<Button>(true))
                 if (b.name.StartsWith("Row")) Paint(b, false);
-            if (selectedLabel != null) selectedLabel.text = "Selected: none";
         }
 
         private static void Paint(Button row, bool selected)

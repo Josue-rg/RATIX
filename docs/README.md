@@ -168,6 +168,7 @@ Canvas de referencia 1920 × 1080, ancla y pivot `0,0`:
 | `InviteModal` | `2006, 3280` |
 | `FriendsModal` | `2006, 0` |
 | `MailModal` | `0, −421.88` (se abre en `0, 77`) |
+| `InviteReceivedModal` | `0, −880` (se abre en `0, 77`) |
 | `ZombieModePanel` | `1546, 0` |
 | `ShooterModePanel` | `3557, 0` |
 | `AdventureModePanel` | `5565, 0` |
@@ -192,6 +193,21 @@ Qué abre cada cosa:
 Los paneles de contenido se reposicionan a la vista en `Start()` (array `panels`)
 y `ShowContent()` alterna su visibilidad; los modales se abren con `OpenModal()`
 (posición cero + `SetAsLastSibling`).
+
+**Guías de posición (solo editor):** para las interfaces que se editan
+estacionadas pero se colocan por código (como el chat de `FriendsModal`) hay un
+recuadro `RuntimeGuide` dentro del modal, en la coordenada exacta de llegada.
+Se ve solo en el editor (al dar Play se apaga solo): se mueve el recuadro y la
+interfaz aparece ahí. Ejemplo: `FriendsModal/Window/ChatGuide` marca dónde cae
+`FriendsModal/Window/Chat`; `FriendsPanel` lee su `anchoredPosition` al abrir el
+chat. Lo mismo aplica a cualquier otra interfaz que necesite una guía.
+
+**Invitación recibida:** `InviteReceivedModal` es el popup que aparece cuando
+otro jugador invita (misma posición que el correo, `0, 77`). Se abre con
+`LobbyController.OpenInviteReceived(inviter, mode, room, map)` y expone
+`Answered` / `Accepted` / `Declined` para que la capa de red responda.
+En `KickModal` e `InviteModal` solo se puede seleccionar **una fila a la vez**
+(`HallActionModal` repinta todas antes de marcar la elegida).
 
 **"Back" recuerda de dónde vienes:** `ShowContent()` guarda la pantalla actual en
 una pila (`contentHistory`) y `GoBack()` la restaura. Por eso, si estás dentro de
