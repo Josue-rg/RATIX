@@ -17,7 +17,11 @@ namespace RATIX
         [SerializeField] private TMP_Text chatStatus;
         [SerializeField] private TMP_Text chatRoom;
 
+        [Tooltip("Posición donde el chat se coloca al abrirse (dentro del panel derecho).")]
+        [SerializeField] private Vector2 chatHome = new Vector2(484f, 24f);
+
         private bool _wired;
+        private RectTransform _chatRect;
 
         private void Awake()
         {
@@ -43,6 +47,7 @@ namespace RATIX
             if (chatName == null) chatName = FindText("Window/Chat/Header/Name");
             if (chatStatus == null) chatStatus = FindText("Window/Chat/Header/Status");
             if (chatRoom == null) chatRoom = FindText("Window/Chat/Header/RoomCard/Title");
+            if (_chatRect == null && chatState != null) _chatRect = chatState.transform as RectTransform;
         }
 
         private TMP_Text FindText(string path)
@@ -74,6 +79,9 @@ namespace RATIX
         {
             if (emptyState != null) emptyState.SetActive(false);
             if (chatState != null) chatState.SetActive(true);
+
+            // El chat se edita estacionado fuera del modal; al abrirse vuelve a su sitio.
+            if (_chatRect != null) _chatRect.anchoredPosition = chatHome;
 
             if (chatName != null) chatName.text = Read(row, "Name", "Player");
             if (chatStatus != null) chatStatus.text = Read(row, "Status", "Offline");
