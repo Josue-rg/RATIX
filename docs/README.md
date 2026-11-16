@@ -41,6 +41,9 @@ armas y diferentes cosas.
   - **Modales flotantes** (se cierran con X): **Clan** (buscar / crear / dentro
     del clan), **Clasificación** (ranking por modo) y **Eventos** (secciones).
 - TextMeshPro importado (fuente por defecto LiberationSans).
+- **Entrada del juego**: `SplashScreen` (logo RATIX + barra, 3.5 s) → `LoginScreen`
+  → lobby. Lo controla `AppFlowController` en `LobbyCanvas`; el login es visual
+  (sin servidor) y avisa con el evento `LoggedIn`.
 
 ---
 
@@ -169,6 +172,8 @@ Canvas de referencia 1920 × 1080, ancla y pivot `0,0`:
 | `FriendsModal` | `2006, 0` |
 | `MailModal` | `0, −421.88` (se abre en `0, 77`) |
 | `InviteReceivedModal` | `0, −880` (se abre en `0, 77`) |
+| `SplashScreen` | `0, 3320` (se muestra a pantalla completa al iniciar) |
+| `LoginScreen` | `0, 5560` (se muestra después del splash) |
 | `ZombieModePanel` | `1546, 0` |
 | `ShooterModePanel` | `3557, 0` |
 | `AdventureModePanel` | `5565, 0` |

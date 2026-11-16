@@ -164,6 +164,29 @@ namespace RATIX.EditorTools
             EditorUtility.DisplayDialog("RATIX", $"Siguiente hueco libre para un panel de 1460 x 1008:\n\nX = {slot.x}\nY = {slot.y}", "Ok");
         }
 
+        [MenuItem("RATIX/UI/Ver invitación recibida", false, 22)]
+        public static void FrameInviteReceived()
+        {
+            var canvas = FindCanvas();
+            if (canvas == null) return;
+
+            var target = canvas.Find("InviteReceivedModal");
+            if (target == null)
+            {
+                EditorUtility.DisplayDialog("RATIX", "No encuentro LobbyCanvas/InviteReceivedModal en la escena.", "Ok");
+                return;
+            }
+
+            Selection.activeGameObject = target.gameObject;
+            var sceneView = SceneView.lastActiveSceneView;
+            if (sceneView != null)
+            {
+                sceneView.in2DMode = true;
+                sceneView.FrameSelected();
+                sceneView.Repaint();
+            }
+        }
+
         // ==== Construcción ====
 
         private static RectTransform NewRect(Transform parent, string name, float width, float height)
