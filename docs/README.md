@@ -263,27 +263,58 @@ fuera del control de versiones.
 
 ---
 
-## Probar en la web (GitHub Pages)
+## Despliegue web (estado actual)
 
-El lobby se publica como **WebGL** en `https://josue-rg.github.io/RATIX/`.
+**Activo:** <https://josue-rg.github.io/RATIX/>
+GitHub Pages · rama `main` · carpeta `/ (root)` · sin Jekyll (`.nojekyll`).
 
-1. En Unity: **RATIX ▸ WebGL ▸ Construir para GitHub Pages**.
-   El build queda en la **raíz del repo**: `index.html`, `Build/` y `TemplateData/`
-   (más `.nojekyll`). El script ya configura Gzip + *Decompression Fallback*, que
-   es lo que necesita un host estático como Pages.
-2. `commit` + `push` de esos archivos.
-3. GitHub Pages reconstruye solo (1-3 min). Para verlo: pestaña **Actions** →
-   "pages build and deployment".
+El lobby corre como **WebGL**. El build vive en la **raíz** del repo y es lo único
+que Pages publica:
 
-**Configuración de Pages (una sola vez):** Settings ▸ Pages ▸ *Build and deployment*
-→ Source: **Deploy from a branch** → Branch: **main** → carpeta **/ (root)** → Save.
+| Ruta | Qué es |
+|---|---|
+| `index.html` | arranque del player |
+| `Build/` | `WebGLBuild.loader.js`, `.data.unityweb`, `.wasm.unityweb`, `.framework.js.unityweb` |
+| `TemplateData/` | estilo, favicon e imágenes del loader |
+| `Data/` | `lib_burst_generated` (lo genera el build) |
+| `.nojekyll` | evita el procesado Jekyll |
 
-> El `.gitignore` ignora `Build/` en general, pero las reglas del final
-> (`!/Build/`, `!/Build/**`, `!/TemplateData/**`) dejan pasar el build publicado.
+- **Peso del build actual: 13.3 MB** (wasm 9.5 MB · data 4.1 MB · resto ~1 MB).
+- **Compresión: Gzip + Decompression Fallback.** Es obligatorio en este host:
+  con Brotli sin fallback la página se queda en la barra de carga.
 
-> Cada build pesa decenas de MB: si se sube uno por cada cambio, el historial de
-> Git crece rápido. Para iterar mucho, construir y subir solo cuando haya algo
-> que valga la pena revisar.
+### Al publicar cambios
+
+```
+RATIX ▸ WebGL ▸ Construir para GitHub Pages
+git add index.html Build TemplateData Data
+git commit -m "build web"
+git push
+```
+
+Pages reconstruye solo en 1-3 min (pestaña **Actions** → *pages build and
+deployment*).
+
+### Reglas y advertencias
+
+1. **Todo cambio que quieras ver en la web necesita build antes del push.** Si
+   solo empujas código, la web sigue mostrando el build anterior.
+2. **No cambiar la compresión del build** a Brotli sin fallback (rompe la carga).
+3. **No borrar `.nojekyll`** ni las excepciones del final del `.gitignore`
+   (`!/Build/`, `!/Build/**`, `!/TemplateData/**`): sin ellas el build no se sube.
+4. **Tamaño:** el sitio publicado puede llegar a ~1 GB; el problema real es el
+   **historial de Git**, que crece ~13 MB por build. Regla práctica: **un build
+   por commit** y construir solo cuando haya algo que probar. Si compilas dos
+   veces seguidas sin publicar: `git commit --amend` en vez de un commit nuevo.
+5. **Nunca** subir `Library/`, `Temp/`, `Logs/` ni `Screenshots/`.
+6. GitHub **bloquea archivos de más de 100 MB** y avisa desde 50 MB. Si un build
+   pasa de ~50 MB, revisar texturas y audio antes de subirlo.
+7. El proyecto queda en **plataforma WebGL** tras construir. Para volver a
+   Windows: *File ▸ Build Profiles ▸ Windows ▸ Switch Platform*. Con la escena
+   abierta el Play normal funciona igual.
+8. Si la web no muestra el cambio, primero **Ctrl + F5** (el loader cachea con
+   IndexedDB) y después mirar *Actions*.
+9. La URL lleva el nombre del repo en mayúsculas: `/RATIX/`.
 
 ---
 
