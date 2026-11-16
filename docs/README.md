@@ -98,7 +98,29 @@ aun así, el flujo en juego es el correcto.
 > ✅ Correcto: se crea y se edita en la escena, estacionada aparte; el script
 > solo la **abre/cierra y la reposiciona**.
 
-#### 5.1 Interfaces y sub-interfaces
+#### 5.1 Dónde se crea cada tipo
+
+| Tipo | Padre en la jerarquía | Tamaño | Zona de parking |
+|---|---|---|---|
+| Pantalla de contenido (modo, hall, tienda, almacén, personajes) | `LobbyCanvas/Content` | 1460 × 1008 | Rejilla a la derecha y abajo del lobby |
+| Modal flotante (Clan, Leaderboard, Events, Settings, Profile, Agenda, Kick, Invite) | `LobbyCanvas` | 1920 × 1080 | Alrededor del canvas (izquierda, arriba, derecha) |
+| Popup lateral (Mails) | `LobbyCanvas` | 460 × 421 | Debajo del canvas |
+
+#### 5.2 RectTransform estándar
+
+- **Raíz de pantalla / modal:** `Anchor Min/Max = 0,0` · `Pivot = 0,0` ·
+  `Size = 1920 × 1080` (o el tamaño del popup) · `Pos = coordenada de parking`.
+- **Contenedor `Window`** (hijo de la raíz): `Anchor = 0.5 / 0.5` ·
+  `Pivot = 0.5 / 0.5` · `Pos = 0,0` · tamaño de la ventana (ej. 900 × 620).
+  Como está centrado por ancla, la ventana se ve bien sin importar dónde esté
+  estacionada la raíz.
+- **Contenido:** el fondo oscuro a pantalla completa vive en la **raíz**; dentro
+  del `Window` van `Title`, `XButton`, el contenido y los botones.
+- **Imágenes con `ui_round_*`:** el sprite tiene borde 9-slice, así que la
+  `Image` debe estar en **Type = Sliced** (`Pixels Per Unit Multiplier = 1`).
+  En `Simple` las esquinas se estiran y el modal se ve deforme.
+
+#### 5.3 Interfaces y sub-interfaces
 
 Hay dos formas válidas; se elige según si comparten marco:
 
@@ -114,7 +136,46 @@ Regla práctica: **si reutiliza el marco del modal → opción 1; si es otra ven
 flotante → opción 2.** En ningún caso se pone una interfaz encima del lobby en el
 editor para "ver cómo queda".
 
-#### 5.2 Runtime: así se junta el flujo
+#### 5.4 Mapa de parking actual y accesos
+
+Canvas de referencia 1920 × 1080, ancla y pivot `0,0`:
+
+| Objeto | Posición en el editor |
+|---|---|
+| Lobby (vista real) | `0, 0` |
+| `EventsModal` | `−2037, 0` |
+| `SettingsModal` | `−2037, 1120` |
+| `ProfileModal` | `−2037, 2200` |
+| `AgendaModal` | `−2037, 3320` |
+| `ClanModal` | `0, 2200` |
+| `LeaderboardModal` | `0, 1120` |
+| `KickModal` | `2006, 2109` |
+| `InviteModal` | `2006, 3280` |
+| `MailModal` | `0, −421.88` (se abre en `0, 77`) |
+| `ZombieModePanel` | `1546, 0` |
+| `ShooterModePanel` | `3557, 0` |
+| `AdventureModePanel` | `5565, 0` |
+| `ZombieHallModelPanel` | `1546, 1076` |
+| `ShooterHallModelPanel` | `3557, 1076` |
+| `StoreModelPanel` | `1546, −1074` |
+| `WarehouseModelPanel` | `1546, −2135` |
+| `CharactersPanel` | `3557, −1074` |
+
+Qué abre cada cosa:
+
+| Acción | Interfaz |
+|---|---|
+| Clic en `LeftColumn/PlayerCard` | `ProfileModal` |
+| `LeftColumn/BottomNav/Schedule` | `AgendaModal` |
+| `LeftColumn/CharacterPanel/CharacterButton` | `CharactersPanel` |
+| `ProfileModal > CHANGE CHARACTER` | `CharactersPanel` |
+| `CharactersPanel > Header/Back` | `ModeSelectPanel` |
+
+Los paneles de contenido se reposicionan a la vista en `Start()` (array `panels`)
+y `ShowContent()` alterna su visibilidad; los modales se abren con `OpenModal()`
+(posición cero + `SetAsLastSibling`).
+
+#### 5.5 Runtime: así se junta el flujo
 
 ```csharp
 // Abrir: del parking a la vista, encima de todo y visible.
@@ -138,7 +199,7 @@ modal.gameObject.SetActive(false);
 - Los sub-paneles también arrancan en su estado inicial (cerrados o en la
   primera pestaña) desde el controlador.
 
-#### 5.3 Checklist antes de dar Play
+#### 5.6 Checklist antes de dar Play
 
 1. ¿Está creada como hijo de `LobbyCanvas` (o de `Content`) y **fuera** del área
    del lobby?

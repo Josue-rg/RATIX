@@ -35,6 +35,9 @@ namespace RATIX
         [Header("More windows")]
         [SerializeField] private RectTransform settingsModal;
         [SerializeField] private RectTransform mailModal;
+        [SerializeField] private RectTransform profileModal;
+        [SerializeField] private RectTransform agendaModal;
+        [SerializeField] private RectTransform charactersPanel;
         [SerializeField] private RectTransform storePanel;
         [SerializeField] private RectTransform warehousePanel;
 
@@ -79,6 +82,11 @@ namespace RATIX
             Wire(storeButton, OpenStore);
             Wire(settingsButton, OpenSettings);
             Wire(FindButton("LeftColumn/BottomNav/Mail"), OpenMail);
+            Wire(FindButton("LeftColumn/BottomNav/Schedule"), OpenAgenda);
+            Wire(FindButton("LeftColumn/CharacterPanel/CharacterButton"), OpenCharacters);
+
+            // Profile: clicking the player card in the left column.
+            WireByPath(transform.Find("LeftColumn") as RectTransform, "PlayerCard", OpenProfile);
 
             // Close modals (X).
             WireByPath(clanModal, "Window/XButton", CloseClan);
@@ -101,6 +109,12 @@ namespace RATIX
             WireByPath(storePanel, "Header/Back", ShowModeSelect);
             WireByPath(warehousePanel, "Header/Back", ShowModeSelect);
             WireByPath(settingsModal, "Window/XButton", CloseSettings);
+            WireByPath(profileModal, "Window/XButton", CloseProfile);
+            WireByPath(profileModal, "Window/CloseButton", CloseProfile);
+            WireByPath(profileModal, "Window/ChangeCharacterButton", OpenCharacters);
+            WireByPath(agendaModal, "Window/XButton", CloseAgenda);
+            WireByPath(agendaModal, "Window/CloseButton", CloseAgenda);
+            WireByPath(charactersPanel, "Header/Back", ShowModeSelect);
 
             // Room click -> Hall.
             for (int i = 0; i < 7; i++)
@@ -122,7 +136,7 @@ namespace RATIX
             WireByPath(shooterHallRect, "RoomList/ActionBar/EnterRoom", EnterMatch);
 
             // Reposition dispersed panels.
-            var panels = new[] { modeSelectRect, zombieModeRect, shooterModeRect, adventureModeRect, zombieHallRect, shooterHallRect, storePanel, warehousePanel };
+            var panels = new[] { modeSelectRect, zombieModeRect, shooterModeRect, adventureModeRect, zombieHallRect, shooterHallRect, storePanel, warehousePanel, charactersPanel };
             foreach (var p in panels)
                 if (p != null) p.anchoredPosition = viewPosition;
 
@@ -134,6 +148,9 @@ namespace RATIX
             if (inviteModal != null) inviteModal.Close();
             if (settingsModal != null) settingsModal.gameObject.SetActive(false);
             if (mailModal != null) mailModal.gameObject.SetActive(false);
+            if (profileModal != null) profileModal.gameObject.SetActive(false);
+            if (agendaModal != null) agendaModal.gameObject.SetActive(false);
+            if (charactersPanel != null) charactersPanel.gameObject.SetActive(false);
 
             ShowModeSelect();
         }
@@ -161,6 +178,9 @@ namespace RATIX
             if (inviteModal == null) inviteModal = FindComponent<HallActionModal>("InviteModal");
             if (settingsModal == null) settingsModal = FindRect("SettingsModal");
             if (mailModal == null) mailModal = FindRect("MailModal");
+            if (profileModal == null) profileModal = FindRect("ProfileModal");
+            if (agendaModal == null) agendaModal = FindRect("AgendaModal");
+            if (charactersPanel == null) charactersPanel = FindRect("Content/CharactersPanel");
             if (storePanel == null) storePanel = FindRect("Content/StoreModelPanel") ?? FindRect("Content/StoreModalPanel");
             if (warehousePanel == null) warehousePanel = FindRect("Content/WarehouseModelPanel") ?? FindRect("Content/WarehouseModalPanel");
         }
@@ -228,6 +248,7 @@ namespace RATIX
             if (shooterHallRect != null) shooterHallRect.gameObject.SetActive(active == shooterHallRect);
             if (storePanel != null) storePanel.gameObject.SetActive(active == storePanel);
             if (warehousePanel != null) warehousePanel.gameObject.SetActive(active == warehousePanel);
+            if (charactersPanel != null) charactersPanel.gameObject.SetActive(active == charactersPanel);
         }
 
         // ==== Modals ====
@@ -281,6 +302,32 @@ namespace RATIX
         public void CloseMail()
         {
             if (mailModal != null) mailModal.gameObject.SetActive(false);
+        }
+
+        // ==== Profile / Agenda / Characters ====
+
+        public void OpenProfile()
+        {
+            CloseAgenda();
+            OpenModal(profileModal);
+        }
+
+        public void CloseProfile() => CloseModal(profileModal);
+
+        public void OpenAgenda()
+        {
+            CloseProfile();
+            OpenModal(agendaModal);
+        }
+
+        public void CloseAgenda() => CloseModal(agendaModal);
+
+        public void OpenCharacters()
+        {
+            CloseProfile();
+            CloseAgenda();
+            if (charactersPanel != null) charactersPanel.anchoredPosition = viewPosition;
+            ShowContent(charactersPanel);
         }
 
         public void OpenStore() => ShowContent(storePanel);
