@@ -181,44 +181,41 @@ fuera del control de versiones.
 
 ## Paletas por modo
 
-El armazón del lobby (fondo, `TopBar`, `LeftColumn`) se mantiene neutral; el color
-identifica a cada modo. Los elementos de acento usan siempre el color de acento y
-su texto va **oscuro**, nunca blanco.
+Dirección de arte: **base neutra casi negra + un acento contenido por modo**. Los
+paneles no se rellenan con el color del modo; solo se tiñen un ~6 % y el color
+aparece en la barra, el título, la pestaña activa, los anillos del carrusel y el
+botón principal. Esa disciplina es lo que hace que el lobby se vea serio y no
+"infantil".
 
-### Zombi
-
-| Rol | Color |
-|---|---|
-| Fondo de panel | `#232824` |
-| Superficies, tarjetas y filas | `#568259` (Fern) mezclado sobre el fondo |
-| Acento: barra, pestaña activa, JOIN/Create/Enter, anillos | `#96e6b3` |
-| Texto principal | `#f1fffa` |
-| Texto secundario | `#a9c6ac` |
-| Texto sobre acento | `#232824` |
-
-Paleta de origen: `#f1fffa` Mint Cream · `#ccfccb` Tea Green · `#96e6b3` Celadon ·
-`#568259` Fern · `#464e47` Iron Grey.
-
-### Shooter
+### Base compartida (todos los modos)
 
 | Rol | Color |
 |---|---|
-| Fondo de panel | `#03045e` |
-| Superficies, tarjetas y filas | `#0077b6` mezclado sobre el fondo |
-| Acento: barra, pestaña activa, JOIN/Create/Enter, anillos | `#48cae4` |
-| Texto principal | `#caf0f8` |
-| Texto secundario | `#82afce` |
-| Texto sobre acento | `#03045e` |
+| Fondo de panel | `#0A0E13` |
+| Superficie / tarjeta | `#141C26` · `#1A242F` |
+| Filas y chips | `#1A242F` · `#202C38` · `#273442` |
+| Texto principal | `#E8EDF4` |
+| Texto secundario | `#93A2B5` |
+| VIP / oro | `#D8A74E` |
+| Equipo rojo / azul | `#CE5A46` / `#6B9BC9` |
 
-Paleta de origen: `#03045e` Deep Twilight · `#023e8a` French Blue · `#0077b6`
-Bright Teal Blue · `#0096c7` Blue Green · `#00b4d8` Turquoise Surf · `#48cae4`
-Sky Aqua · `#90e0ef` Frosted Blue · `#ade8f4` Frosted Blue 2 · `#caf0f8` Light Cyan.
+### Acentos
+
+| Modo | Acento (detalles y texto) | Botón / pestaña activa | Texto sobre botón |
+|---|---|---|---|
+| Zombi | `#6CA578` | `#4E7C57` | `#F2F7F2` |
+| Shooter | `#5B9FB8` | `#1F6180` | `#EAF5FA` |
+| Aventura | `#C9A15B` | `#6B5027` | `#F7F1E4` |
+
+Regla: el acento claro va solo en elementos **pequeños**; las superficies grandes
+(paneles, tarjetas, botones) usan el tono profundo. Así el color guía la vista sin
+gritar.
 
 **Dónde se aplican:** `Content/ModeSelectPanel/ZombieButton`, `ShooterButton`,
-`Content/ZombieModePanel`, `Content/ShooterModePanel`,
-`Content/ZombieHallModelPanel` y `Content/ShooterHallModelPanel`. Si se re-ejecuta
-`RATIXUITheme` (tema del editor), vuelve a pintar con la paleta azul por defecto:
-hay que reaplicar estos colores después.
+`AdventureButton`, `Content/ZombieModePanel`, `ShooterModePanel`,
+`AdventureModePanel`, `ZombieHallModelPanel` y `ShooterHallModelPanel`. Si se
+re-ejecuta `RATIXUITheme` (tema del editor), vuelve a pintar con la paleta azul
+por defecto: hay que reaplicar estos colores después.
 
 ---
 
