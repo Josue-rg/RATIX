@@ -115,3 +115,9 @@ InitTestScene*.unity*
 
 # Capturas locales de trabajo (no se suben al repositorio)
 /Screenshots/
+
+# WebGL desplegado en GitHub Pages (raiz del repo)
+!/Build/
+!/Build/**
+!/TemplateData/
+!/TemplateData/**

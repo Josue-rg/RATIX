@@ -263,6 +263,30 @@ fuera del control de versiones.
 
 ---
 
+## Probar en la web (GitHub Pages)
+
+El lobby se publica como **WebGL** en `https://josue-rg.github.io/RATIX/`.
+
+1. En Unity: **RATIX ▸ WebGL ▸ Construir para GitHub Pages**.
+   El build queda en la **raíz del repo**: `index.html`, `Build/` y `TemplateData/`
+   (más `.nojekyll`). El script ya configura Gzip + *Decompression Fallback*, que
+   es lo que necesita un host estático como Pages.
+2. `commit` + `push` de esos archivos.
+3. GitHub Pages reconstruye solo (1-3 min). Para verlo: pestaña **Actions** →
+   "pages build and deployment".
+
+**Configuración de Pages (una sola vez):** Settings ▸ Pages ▸ *Build and deployment*
+→ Source: **Deploy from a branch** → Branch: **main** → carpeta **/ (root)** → Save.
+
+> El `.gitignore` ignora `Build/` en general, pero las reglas del final
+> (`!/Build/`, `!/Build/**`, `!/TemplateData/**`) dejan pasar el build publicado.
+
+> Cada build pesa decenas de MB: si se sube uno por cada cambio, el historial de
+> Git crece rápido. Para iterar mucho, construir y subir solo cuando haya algo
+> que valga la pena revisar.
+
+---
+
 ## Paletas por modo
 
 Dirección de arte: **base neutra casi negra + un acento contenido por modo**. Los
