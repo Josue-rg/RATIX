@@ -98,6 +98,21 @@ aun así, el flujo en juego es el correcto.
 > ✅ Correcto: se crea y se edita en la escena, estacionada aparte; el script
 > solo la **abre/cierra y la reposiciona**.
 
+#### Atajos de creación (RATIX ▸ UI)
+
+Para no repetir el trabajo manual, el editor trae un kit en el menú **RATIX ▸ UI**.
+Solo **crea** objetos nuevos: no modifica ni repinta interfaces existentes.
+
+| Opción | Qué hace |
+|---|---|
+| **Crear modal vacío** | Modal 1920 × 1080 con fondo oscuro, `Window` de 900 × 620, título, X y área de contenido. Ya sale con los sprites en `Sliced` y el estacionamiento asignado |
+| **Crear panel de contenido vacío** | Panel 1460 × 1008 dentro de `Content`, con header (Back + título) y cuerpo |
+| **Duplicar fila seleccionada** | Clona la fila elegida, la renombra (`Room3` → `Room4`) y la baja el alto + 8 px |
+| **Ver siguiente hueco (modal / panel)** | Muestra la coordenada libre para no montar interfaces encima de otras |
+
+Elegir el hueco es automático: el kit mide las interfaces grandes que ya existen y
+toma la primera coordenada libre de la rejilla.
+
 #### 5.1 Dónde se crea cada tipo
 
 | Tipo | Padre en la jerarquía | Tamaño | Zona de parking |
