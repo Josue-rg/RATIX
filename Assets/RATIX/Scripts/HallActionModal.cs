@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,8 +7,9 @@ using UnityEngine.UI;
 namespace RATIX
 {
     /// <summary>
-    /// Small two-column modal used by the hall to kick a player or invite a friend.
-    /// Clicking a row selects it; the action button confirms and closes.
+    /// Small two-column modal used by the hall to kick players or invite friends.
+    /// Clicking a row toggles it: se pueden seleccionar varias filas y el botón
+    /// de acción actúa sobre todas las elegidas.
     /// </summary>
     public class HallActionModal : MonoBehaviour
     {
@@ -18,7 +21,7 @@ namespace RATIX
         private static readonly Color RowOdd = new Color(0.086f, 0.133f, 0.212f);
         private static readonly Color RowSelected = new Color(0.13f, 0.30f, 0.24f);
 
-        private Button _selected;
+        private readonly List<Button> _selected = new List<Button>();
         private bool _wired;
 
         public void Init(string action, Button button, TMP_Text selected)
@@ -60,29 +63,62 @@ namespace RATIX
             {
                 if (!b.name.StartsWith("Row")) continue;
                 var captured = b;
-                b.onClick.AddListener(() => Select(captured));
+                b.onClick.AddListener(() => Toggle(captured));
             }
         }
 
-        private void Select(Button row)
+        /// <summary>Marca o desmarca una fila. Se pueden elegir varias.</summary>
+        private void Toggle(Button row)
         {
-            // Solo una fila seleccionada: se repinta todo antes de marcar la nueva.
-            RepaintAll();
-            _selected = row;
-            Paint(row, true);
-
-            if (selectedLabel != null)
+            if (_selected.Contains(row))
             {
-                var t = row.GetComponentInChildren<TMP_Text>();
-                selectedLabel.text = "Selected: " + (t != null ? t.text : "?");
+                _selected.Remove(row);
+                Paint(row, false);
             }
+            else
+            {
+                _selected.Add(row);
+                Paint(row, true);
+            }
+
+            UpdateLabel();
+        }
+
+        private void UpdateLabel()
+        {
+            if (selectedLabel == null) return;
+
+            if (_selected.Count == 0)
+            {
+                selectedLabel.text = "Selected: none";
+                return;
+            }
+
+            if (_selected.Count == 1)
+            {
+                selectedLabel.text = "Selected: " + ReadName(_selected[0]);
+                return;
+            }
+
+            string noun = IsInvite ? "friends" : "players";
+            selectedLabel.text = "Selected: " + _selected.Count + " " + noun;
+        }
+
+        private bool IsInvite =>
+            !string.IsNullOrEmpty(actionName) &&
+            actionName.ToUpperInvariant().Contains("INVITE");
+
+        private string ReadName(Button row)
+        {
+            var text = row.GetComponentInChildren<TMP_Text>();
+            return text != null ? text.text : "?";
         }
 
         private void ClearSelection()
         {
-            _selected = null;
+            _selected.Clear();
             RepaintAll();
-            if (selectedLabel != null) selectedLabel.text = "Selected: none";
+            UpdateLabel();
         }
 
         private void RepaintAll()
@@ -100,8 +136,21 @@ namespace RATIX
 
         private void Execute()
         {
-            string name = _selected != null ? _selected.GetComponentInChildren<TMP_Text>().text : "none";
-            Debug.Log($"[RATIX] {actionName}: {name}");
+            if (_selected.Count == 0)
+            {
+                Debug.Log($"[RATIX] {actionName}: none");
+                Close();
+                return;
+            }
+
+            var names = new StringBuilder();
+            for (int i = 0; i < _selected.Count; i++)
+            {
+                if (i > 0) names.Append(", ");
+                names.Append(ReadName(_selected[i]));
+            }
+
+            Debug.Log($"[RATIX] {actionName} ({_selected.Count}): {names}");
             Close();
         }
     }

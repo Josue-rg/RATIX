@@ -211,8 +211,8 @@ chat. Lo mismo aplica a cualquier otra interfaz que necesite una guía.
 otro jugador invita (misma posición que el correo, `0, 77`). Se abre con
 `LobbyController.OpenInviteReceived(inviter, mode, room, map)` y expone
 `Answered` / `Accepted` / `Declined` para que la capa de red responda.
-En `KickModal` e `InviteModal` solo se puede seleccionar **una fila a la vez**
-(`HallActionModal` repinta todas antes de marcar la elegida).
+En `KickModal` e `InviteModal` se pueden seleccionar **varias filas** (clic para
+marcar o desmarcar); la acción se aplica a todas las elegidas.
 
 **"Back" recuerda de dónde vienes:** `ShowContent()` guarda la pantalla actual en
 una pila (`contentHistory`) y `GoBack()` la restaura. Por eso, si estás dentro de
