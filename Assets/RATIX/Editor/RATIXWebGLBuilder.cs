@@ -44,6 +44,11 @@ namespace RATIX.EditorTools
             PlayerSettings.defaultWebScreenHeight = 1080;
             PlayerSettings.runInBackground = true;
 
+            // Plantilla propia: canvas 16:9 escalado a la ventana (letterbox).
+            // Sin esto Unity vuelve a la plantilla Default, que clava el canvas
+            // en 1920x1080 px y lo recorta en pantallas pequeñas.
+            PlayerSettings.WebGL.template = "PROJECT:RATIX";
+
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(LobbyScene, true) };
 
             if (Directory.Exists(TempBuild)) Directory.Delete(TempBuild, true);

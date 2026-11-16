@@ -29,7 +29,42 @@
     </div>
     <script>
       let canvas = document.querySelector("#unity-canvas");
+      let container = document.querySelector("#unity-container");
       let fullscreenContainer = document.querySelector("#unity-fullscreen-container");
+      let footer = document.querySelector("#unity-footer");
+
+      // ---------------------------------------------------------------
+      // Ajuste de pantalla (letterbox 16:9).
+      // El juego se diseña a 1920x1080, así que el canvas se escala para
+      // caber COMPLETO en cualquier pantalla, manteniendo la proporción.
+      // Si la ventana no es 16:9, quedan franjas negras alrededor.
+      // ---------------------------------------------------------------
+      const DESIGN_WIDTH = 1920;
+      const DESIGN_HEIGHT = 1080;
+
+      function fitCanvasToWindow() {
+        if (!fullscreenContainer) return;
+
+        // En móvil el CSS ya ocupa el 100% y el footer se oculta.
+        if (container.classList.contains("unity-mobile")) return;
+
+        const footerHeight = footer ? (footer.offsetHeight || 38) : 0;
+        const availableWidth = Math.max(1, window.innerWidth);
+        const availableHeight = Math.max(1, window.innerHeight - footerHeight);
+
+        const scale = Math.min(availableWidth / DESIGN_WIDTH, availableHeight / DESIGN_HEIGHT);
+        const width = Math.max(1, Math.floor(DESIGN_WIDTH * scale));
+        const height = Math.max(1, Math.floor(DESIGN_HEIGHT * scale));
+
+        fullscreenContainer.style.width = width + "px";
+        fullscreenContainer.style.height = height + "px";
+        if (footer) footer.style.width = width + "px";
+      }
+
+      window.addEventListener("resize", fitCanvasToWindow);
+      window.addEventListener("orientationchange", fitCanvasToWindow);
+      window.addEventListener("fullscreenchange", fitCanvasToWindow);
+      window.addEventListener("webkitfullscreenchange", fitCanvasToWindow);
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -45,9 +80,9 @@
         var div = document.createElement('div');
         div.innerHTML = msg;
         warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        if (type == 'error') div.style = 'background: red; padding: 10px; margin: 4px 0;';
         else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px; margin: 4px 0;';
           setTimeout(function() {
             warningBanner.removeChild(div);
             updateBannerVisibility();
@@ -68,7 +103,8 @@
         // If you have a custom web site structure, or want to place multiple Unity build instances on the same page,
         // you can pass fullscreenElementID: "my-unity-fullscreen-container-id", in this configuration field to
         // explicitly point to the element tree root that is displayed in fullscreen mode.
-        fullscreenElementID: "unity-fullscreen-container",
+        // Se usa el contenedor completo para que el modo pantalla completa respete el letterbox.
+        fullscreenElementID: "unity-container",
 
         companyName: "DefaultCompany",
         productName: "RATIX",
@@ -114,9 +150,8 @@
 
 
       } else {
-        // Desktop style: Render the game canvas container in a window that can be maximized to fullscreen:
-        fullscreenContainer.style.width = "1920px";
-        fullscreenContainer.style.height = "1080px";
+        // Desktop style: letterbox 16:9, el tamaño se calcula en fitCanvasToWindow().
+        fitCanvasToWindow();
       }
 
 

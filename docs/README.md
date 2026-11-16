@@ -283,6 +283,35 @@ que Pages publica:
 - **Compresión: Gzip + Decompression Fallback.** Es obligatorio en este host:
   con Brotli sin fallback la página se queda en la barra de carga.
 
+### Pantalla y escalado (letterbox 16:9)
+
+El lobby está diseñado a **1920 × 1080**. En la web el canvas **nunca** se muestra a
+tamaño fijo: se escala para **caber completo** en la ventana manteniendo la
+proporción 16:9 y, si la pantalla no es 16:9 (portátil 16:10, ventana estrecha),
+quedan **franjas negras** alrededor. Así se ve igual en el monitor que en la
+laptop, sin recortes ni scroll.
+
+- El tamaño se calcula en `fitCanvasToWindow()` dentro de `index.html`
+  (`Math.min(anchoVentana/1920, alturaVentana/1080)`) y se recalcula en
+  `resize`, `orientationchange` y `fullscreenchange`.
+- La fuente de verdad es la **plantilla propia**
+  `Assets/WebGLTemplates/RATIX/` (`index.html` + `TemplateData/`), y
+  `RATIXWebGLBuilder` la aplica con
+  `PlayerSettings.WebGL.template = "PROJECT:RATIX"`.
+- ⚠️ **No editar a mano el `index.html` de la raíz para cambiar el tamaño:** se
+  regenera en cada build. Cualquier cambio va en la plantilla.
+- El botón de pantalla completa usa `fullscreenElementID: "unity-container"`
+  para que el letterbox también se respete en fullscreen.
+- Los `CanvasScaler` del lobby siguen en **Scale With Screen Size · 1920×1080 ·
+  Match 0.5**; con el canvas siempre en 16:9 no hace falta tocarlos.
+
+| Ventana del navegador | Canvas resultante |
+|---|---|
+| 1366 × 768 | 1297 × 730 |
+| 1536 × 730 | 1230 × 692 |
+| 1920 × 1080 | 1852 × 1042 |
+| 1280 × 800 (16:10) | 1280 × 720 + barras |
+
 ### Al publicar cambios
 
 ```
