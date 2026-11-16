@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 38e48c80a27f5e845a73ffd7cc60e5ab
+guid: 6c4c4fa4c9747344daa64af87d8a4cec
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7650659109916309635
-    second: Cuchillo_0
+      213: -476584811375590587
+    second: Weapon_silhouettes_in_grid_484a8f22_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -42,7 +42,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -74,10 +74,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -128,13 +128,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cuchillo_0
+      name: Weapon_silhouettes_in_grid_484a8f22_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 133
-        height: 97
+        width: 1376
+        height: 768
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,8 +143,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 388fa20fce99c2a60800000000000000
-      internalID: 7650659109916309635
+      spriteID: 5438c9c93a4d269f0800000000000000
+      internalID: -476584811375590587
       vertices: []
       indices: 
       edges: []

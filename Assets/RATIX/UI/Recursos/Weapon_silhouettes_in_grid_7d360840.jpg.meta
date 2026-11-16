@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c4e943935886e9c4fa3f715a8be81e2b
+guid: e00cce826305fcf44ac7b7566574da70
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8036963715787356027
-    second: Submetralladora_0
+      213: 3285174360542726271
+    second: Weapon_silhouettes_in_grid_7d360840_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -42,7 +42,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -74,10 +74,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -128,13 +128,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Submetralladora_0
+      name: Weapon_silhouettes_in_grid_7d360840_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 152
-        height: 132
+        width: 1376
+        height: 768
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,8 +143,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b777538fae7098f60800000000000000
-      internalID: 8036963715787356027
+      spriteID: f78ce51eca8479d20800000000000000
+      internalID: 3285174360542726271
       vertices: []
       indices: 
       edges: []
