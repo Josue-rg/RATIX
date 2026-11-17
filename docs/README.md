@@ -55,6 +55,12 @@ armas y diferentes cosas.
   marca el día de hoy y se adapta a 4, 5 o 6 semanas.
 - **Ajustes**: los cambios (incluido el idioma) no se aplican al pulsar; al dar
   **APPLY** se abre `ConfirmModal` y solo al confirmar se aplican.
+- **Mapas**: ocho mapas jugables de prueba, con un controlador FPS que usa el
+  **modelo de arma real** del proyecto:
+  - Shooter: **Foundry**, **Kasbah**, **Muelle 7** y **Metro Línea 9**.
+  - Zombi: **Búnker K-9**, **Hacienda El Alba**, **Carguero Aurora** y
+    **Templo de la Niebla**.
+  Ver [`docs/Mapas.md`](Mapas.md).
 
 ---
 
@@ -443,6 +449,7 @@ por defecto: hay que reaplicar estos colores después.
 ## Documentación
 
 - [Localización / idiomas](Localizacion.md) — obligatorio para todo texto nuevo
+- [Mapas](Mapas.md) — estructura de carpetas de mapas y mapa Foundry
 - [Modo Zombi](Modo-Zombi.md)
 - [Modo Shooter](Modo-Shooter.md)
 - [Modo Aventura](Modo-Aventura.md)

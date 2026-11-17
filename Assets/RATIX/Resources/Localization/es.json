@@ -480,6 +480,14 @@
   "value.c4_groups": "C4 - grupos",
   "value.war": "Guerra",
   "value.p_vs_p": "P vs P",
+  "value.foundry": "Fundición",
+  "value.kasbah": "Kasbah",
+  "value.bunker_k9": "Búnker K-9",
+  "value.hacienda_alba": "Hacienda El Alba",
+  "value.pier7": "Muelle 7",
+  "value.metro9": "Metro Línea 9",
+  "value.ship_aurora": "Carguero Aurora",
+  "value.temple_mist": "Templo de la Niebla",
   "confirm.title": "¿ESTÁS SEGURO?",
   "settings.confirm_apply": "¿Aplicar todos los cambios de ajustes?"
 }
