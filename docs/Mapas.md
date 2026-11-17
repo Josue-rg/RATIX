@@ -227,6 +227,33 @@ por superficie. Con ella se corrigieron:
 El informe sigue listando decenas de pares, pero la mayoría son **caras ocultas**
 (una tapa sobre su caja, el fondo de un casco contra sus costados): no se ven.
 
+### Colisiones y límites
+
+- **Todas** las paredes, tejados, rampas, escaleras, barandillas, muebles y
+  máquinas llevan collider (`Box`/`Capsule`). Las piezas decorativas (franjas,
+  cristales, remates) no lo llevan a propósito, para no engancharse.
+- **Muelle 7** y **Carguero Aurora**: se añadieron **barreras invisibles** de 5 m
+  en el borde del muelle y de la cubierta. Antes se podía saltar la barandilla y
+  caer al mar sin fin; ahora el borde corta.
+- **Metro**: el foso se baja por las escaleras del vestíbulo y se sube por las
+  mismas; el tren y los andenes bloquean el paso.
+- Comprobado con raycast: muro de casa de Kasbah a 5,7 m, barrera del muelle a
+  4,9 m y barrera del barco a 3,9 m.
+
+### Oclusión
+
+Occlusion culling horneado en los mapas cerrados: **Búnker 30 KB · Metro 16 KB ·
+Kasbah 53 KB · Carguero 26 KB**. Los mapas abiertos (Foundry, Muelle 7,
+Hacienda, Templo) no lo necesitan: no hay nada grande que tape la vista.
+
+### Lo que no se horneó (y por qué)
+
+- **Lightmaps:** las primitivas comparten las UV de luz entre caras (cada cara
+  usa 0..1), así que un bake sangraría la luz de una pared a otra. Para hornear
+  hace falta malla propia con UV2 por prop.
+- **LODs:** cada prop son 6-15 cubos (menos de 1.000 triángulos). El ahorro sería
+  nulo y duplicaría assets; el batching ya los agrupa.
+
 ---
 
 ## 8. Pendiente

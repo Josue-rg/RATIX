@@ -281,6 +281,12 @@ namespace RATIX
             Box(hull, "BulwarkCapN", new Vector3(0f, 1.24f, HZ - 0.15f), new Vector3(HX * 2f, 0.08f, 0.45f), MHazard, false);
             Box(hull, "BulwarkCapS", new Vector3(0f, 1.24f, -HZ + 0.15f), new Vector3(HX * 2f, 0.08f, 0.45f), MHazard, false);
 
+            // Cierre invisible: no se puede saltar la amurada al mar.
+            RATIXMapKit.Barrier(hull, "BoundaryN", new Vector3(0f, 2.5f, HZ - 0.9f), new Vector3(HX * 2f, 5f, 0.4f));
+            RATIXMapKit.Barrier(hull, "BoundaryS", new Vector3(0f, 2.5f, -HZ + 0.9f), new Vector3(HX * 2f, 5f, 0.4f));
+            RATIXMapKit.Barrier(hull, "BoundaryBow", new Vector3(HX - 0.7f, 2.5f, 0f), new Vector3(0.4f, 5f, HZ * 2f));
+            RATIXMapKit.Barrier(hull, "BoundaryStern", new Vector3(-HX + 0.7f, 2.5f, 0f), new Vector3(0.4f, 5f, HZ * 2f));
+
             // Nombre del buque (franja).
             Box(hull, "HullStripe", new Vector3(0f, -1.2f, -HZ + 0.05f), new Vector3(40f, 0.35f, 0.06f), MHazard, false);
         }

@@ -264,6 +264,12 @@ namespace RATIX
             Box(harbour, "QuayEast", new Vector3(HX, QuayH * 0.5f, 0f), new Vector3(1.2f, QuayH, HZ * 2f), MConcrete);
             Box(harbour, "QuayWest", new Vector3(-HX, QuayH * 0.5f, 0f), new Vector3(1.2f, QuayH, HZ * 2f), MConcrete);
 
+            // Cierre invisible: la barandilla del muelle no se puede saltar.
+            RATIXMapKit.Barrier(harbour, "BoundaryN", new Vector3(0f, 2.5f, HZ - 0.9f), new Vector3(HX * 2f, 5f, 0.4f));
+            RATIXMapKit.Barrier(harbour, "BoundaryS", new Vector3(0f, 2.5f, -HZ + 0.9f), new Vector3(HX * 2f, 5f, 0.4f));
+            RATIXMapKit.Barrier(harbour, "BoundaryE", new Vector3(HX - 0.9f, 2.5f, 0f), new Vector3(0.4f, 5f, HZ * 2f));
+            RATIXMapKit.Barrier(harbour, "BoundaryW", new Vector3(-HX + 0.9f, 2.5f, 0f), new Vector3(0.4f, 5f, HZ * 2f));
+
             // Defensas de goma y noráis.
             for (float x = -44f; x <= 44f; x += 11f)
             {

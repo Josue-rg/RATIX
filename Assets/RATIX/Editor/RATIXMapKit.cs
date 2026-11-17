@@ -556,6 +556,19 @@ namespace RATIX
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>Barrera invisible: solo collider, sin malla ni sombra.</summary>
+        public static GameObject Barrier(Transform parent, string name, Vector3 position, Vector3 size)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = position;
+
+            var box = go.AddComponent<BoxCollider>();
+            box.size = size;
+
+            return go;
+        }
+
         public static void SetArray(SerializedObject serialized, string field, Object[] values)
         {
             var array = serialized.FindProperty(field);
