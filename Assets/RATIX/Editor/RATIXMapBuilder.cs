@@ -83,6 +83,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             BuildPlayer(definition);
@@ -437,8 +439,8 @@ namespace RATIX
 
             Box(arena, "TrimNorth", new Vector3(0f, WallH + 0.1f, HalfZ), new Vector3(HalfX * 2f + 2.4f, 0.2f, 1.5f), MMetal, false);
             Box(arena, "TrimSouth", new Vector3(0f, WallH + 0.1f, -HalfZ), new Vector3(HalfX * 2f + 2.4f, 0.2f, 1.5f), MMetal, false);
-            Box(arena, "TrimEast", new Vector3(HalfX, WallH + 0.1f, 0f), new Vector3(1.5f, 0.2f, HalfZ * 2f + 2.4f), MMetal, false);
-            Box(arena, "TrimWest", new Vector3(-HalfX, WallH + 0.1f, 0f), new Vector3(1.5f, 0.2f, HalfZ * 2f + 2.4f), MMetal, false);
+            Box(arena, "TrimEast", new Vector3(HalfX, WallH + 0.1f, 0f), new Vector3(1.5f, 0.2f, HalfZ * 2f - 3f), MMetal, false);
+            Box(arena, "TrimWest", new Vector3(-HalfX, WallH + 0.1f, 0f), new Vector3(1.5f, 0.2f, HalfZ * 2f - 3f), MMetal, false);
 
             for (int x = -40; x <= 40; x += 10)
             {
@@ -516,15 +518,15 @@ namespace RATIX
             float cy = DeckTop - DeckThickness * 0.5f;
             const float laneX = 26f;          // eje de la pasarela alta
             const float bridgeStart = 12f;    // borde del techo central
-            const float bridgeCenter = (laneX + bridgeStart) * 0.5f;
-            const float bridgeLength = laneX - bridgeStart;
+            const float bridgeCenter = 18.2f;
+            const float bridgeLength = 12.4f;
 
             for (int sx = -1; sx <= 1; sx += 2)
             {
                 float cx = sx * laneX;
                 var catwalk = Group(lanes, sx > 0 ? "CatwalkEast" : "CatwalkWest");
 
-                Box(catwalk, "Deck", new Vector3(cx, cy, 0f), new Vector3(3.2f, DeckThickness, 42f), MMetal);
+                Box(catwalk, "Deck", new Vector3(cx, cy, 0f), new Vector3(3.2f, DeckThickness, 41f), MMetal);
 
                 foreach (float offset in new[] { -1.6f, 1.6f })
                 {
@@ -608,8 +610,8 @@ namespace RATIX
 
             // Franja de equipo en las paredes largas.
             var stripe = side < 0f ? MTeamA : MTeamB;
-            Box(b, "StripeN", new Vector3(cx, 2.4f, 11.57f), new Vector3(14f, 0.16f, 0.06f), stripe, false);
-            Box(b, "StripeS", new Vector3(cx, 2.4f, -11.57f), new Vector3(14f, 0.16f, 0.06f), stripe, false);
+            Box(b, "StripeN", new Vector3(cx, 2.4f, 11.55f), new Vector3(14f, 0.16f, 0.06f), stripe, false);
+            Box(b, "StripeS", new Vector3(cx, 2.4f, -11.55f), new Vector3(14f, 0.16f, 0.06f), stripe, false);
 
             Box(b, "TrimFront", new Vector3(frontX, 4.05f, 0f), new Vector3(0.9f, 0.14f, 10.2f), stripe, false);
         }

@@ -103,6 +103,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);
@@ -337,8 +339,8 @@ namespace RATIX
             var canal = Group(environment, "Canal");
 
             Box(canal, "Bed", new Vector3(0f, -2.1f, 0f), new Vector3(HX * 2f, 1f, 6f), MDirt);
-            Box(canal, "WallN", new Vector3(0f, -0.8f, 3f), new Vector3(HX * 2f, 1.6f, 0.5f), MStoneDark);
-            Box(canal, "WallS", new Vector3(0f, -0.8f, -3f), new Vector3(HX * 2f, 1.6f, 0.5f), MStoneDark);
+            Box(canal, "WallN", new Vector3(0f, -0.85f, 3f), new Vector3(HX * 2f, 1.6f, 0.5f), MStoneDark);
+            Box(canal, "WallS", new Vector3(0f, -0.85f, -3f), new Vector3(HX * 2f, 1.6f, 0.5f), MStoneDark);
             Box(canal, "CopingN", new Vector3(0f, 0.04f, 3.3f), new Vector3(HX * 2f, 0.12f, 0.7f), MStone, false);
             Box(canal, "CopingS", new Vector3(0f, 0.04f, -3.3f), new Vector3(HX * 2f, 0.12f, 0.7f), MStone, false);
 
@@ -425,7 +427,7 @@ namespace RATIX
                 new RATIXMapKit.Opening(0f, 3f, 0.7f, 1.9f));
 
             // Tejado plano transitable.
-            Box(house, "Roof", new Vector3(0f, HouseRoof - 0.15f, 0f), new Vector3(HouseW + 0.6f, 0.3f, HouseD + 0.6f), MTerracotta);
+            Box(house, "Roof", new Vector3(0f, HouseRoof - 0.1f, 0f), new Vector3(HouseW + 0.6f, 0.3f, HouseD + 0.6f), MTerracotta);
             float py = HouseRoof + 0.45f;
             WallAlongX(house, "ParapetN", halfD - 0.2f, -halfW + 0.25f, halfW - 0.25f, py, 0.9f, 0.35f, MPlaster);
             WallAlongX(house, "ParapetS", -halfD + 0.2f, -halfW + 0.25f, halfW - 0.25f, py, 0.9f, 0.35f, MPlaster,
@@ -444,7 +446,7 @@ namespace RATIX
                 Cylinder(house, "Column" + i, new Vector3(x, GroundH * 0.5f, halfD + 1.6f), 0.28f, GroundH, MPlaster);
             }
 
-            Box(house, "PorchRoof", new Vector3(0f, GroundH + 0.15f, halfD + 1.1f), new Vector3(HouseW, 0.3f, 4.4f), MTerracotta);
+            Box(house, "PorchRoof", new Vector3(0f, GroundH + 0.02f, halfD + 1.1f), new Vector3(HouseW, 0.3f, 4.4f), MTerracotta);
             Box(house, "PorchBeam", new Vector3(0f, GroundH - 0.1f, halfD + 3.3f), new Vector3(HouseW, 0.3f, 0.3f), MWoodDark, false);
 
             // Muebles y cobertura interior.

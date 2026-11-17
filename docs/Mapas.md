@@ -189,7 +189,47 @@ y otra de **abrir** por cada mapa.
 
 ---
 
-## 7. Pendiente
+## 7. Remaster y rendimiento
+
+Los ocho mapas pasan por un **pase de pulido** (`RATIXMapKit.Polish`) al
+construirse:
+
+| Acción | Efecto |
+|---|---|
+| Marcar toda la geometría como `BatchingStatic` | Se combinan mallas por material: menos draw calls |
+| Apagar sombra de las piezas decorativas (sin collider) | El pase de sombras deja de dibujar cientos de remates |
+| `enableInstancing` en todos los materiales | Instancing para las piezas repetidas |
+| Batching estático **activado para WebGL** | Antes estaba desactivado en Player Settings |
+
+En el último pase cada mapa marcó entre **200 y 816** renderers como estáticos y
+apagó la sombra de entre **79 y 468** piezas decorativas (remates, franjas,
+cristales, barandillas y demás geometría sin collider).
+
+### Herramienta de solapes (z-fighting)
+
+`RATIX ▸ Mapas ▸ Remasterizar escena abierta` aplica el pulido a la escena
+abierta y escribe en consola los pares de mallas con caras coplanares, ordenados
+por superficie. Con ella se corrigieron:
+
+- **Foundry:** pasarela y torre se solapaban 0,5 m; franjas de equipo separadas
+  2 cm de la pared; remates de esquina recortados.
+- **Kasbah:** tejado 5 cm por encima de los muros; remates de esquina recortados;
+  franjas del pavimento 3 cm más altas.
+- **Búnker:** anillo de paso recortado en las esquinas; vigas 5 cm por debajo del
+  techo; escalera y muelle sin caras coincidentes.
+- **Hacienda:** techo del porche por debajo del forjado; muros del canal 5 cm más
+  bajos; tejado 5 cm por encima de los muros altos.
+- **Metro:** el vestíbulo y el andén ya no comparten plano (se recortó el
+  vestíbulo 4 m); el tren y el foso no se tocan.
+- **Muelle 7 / Carguero / Templo:** cubierta y bodega separadas; agua 2 cm sobre
+  el suelo; musgo del muro 5 cm más alto.
+
+El informe sigue listando decenas de pares, pero la mayoría son **caras ocultas**
+(una tapa sobre su caja, el fondo de un casco contra sus costados): no se ven.
+
+---
+
+## 8. Pendiente
 
 - **Lógica del modo Zombi** (infección, rondas, contagio) y enlazar los mapas al
   carrusel de *Crear sala*.

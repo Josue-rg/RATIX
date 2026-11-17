@@ -77,6 +77,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);
@@ -252,7 +254,7 @@ namespace RATIX
             Box(jungle, "WallSouth", new Vector3(0f, FenceH * 0.5f, -HZ), new Vector3(HX * 2f + 2f, FenceH, 1.2f), MStone);
             Box(jungle, "WallEast", new Vector3(HX, FenceH * 0.5f, 0f), new Vector3(1.2f, FenceH, HZ * 2f), MStone);
             Box(jungle, "WallWest", new Vector3(-HX, FenceH * 0.5f, 0f), new Vector3(1.2f, FenceH, HZ * 2f), MStone);
-            Box(jungle, "MossNorth", new Vector3(0f, FenceH - 0.45f, HZ - 0.1f), new Vector3(HX * 2f, 0.9f, 0.25f), MMoss, false);
+            Box(jungle, "MossNorth", new Vector3(0f, FenceH - 0.4f, HZ - 0.1f), new Vector3(HX * 2f, 0.9f, 0.25f), MMoss, false);
 
             for (int i = 0; i < 14; i++)
             {
@@ -372,7 +374,7 @@ namespace RATIX
             {
                 float cx = sx * 26f;
 
-                Box(pools, "Water" + sx, new Vector3(cx, 0.04f, 14f), new Vector3(11f, 0.08f, 13f), MWater, false);
+                Box(pools, "Water" + sx, new Vector3(cx, 0.06f, 14f), new Vector3(11f, 0.08f, 13f), MWater, false);
 
                 Box(pools, "EdgeN" + sx, new Vector3(cx, 0.16f, 20.8f), new Vector3(12f, 0.35f, 0.7f), MStoneDark);
                 Box(pools, "EdgeS" + sx, new Vector3(cx, 0.16f, 7.2f), new Vector3(12f, 0.35f, 0.7f), MStoneDark);

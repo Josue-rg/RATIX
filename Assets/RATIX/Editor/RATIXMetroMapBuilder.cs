@@ -81,6 +81,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);
@@ -345,7 +347,7 @@ namespace RATIX
                 float cx = side * 37f;
 
                 // Solera a la altura del andén.
-                Box(hall, "Floor", new Vector3(cx, PlatformY * 0.5f, 0f), new Vector3(10f, PlatformY, HZ * 2f), MConcrete);
+                Box(hall, "Floor", new Vector3(cx + side * 2f, PlatformY * 0.5f, 0f), new Vector3(6f, PlatformY, HZ * 2f), MConcrete);
                 Box(hall, "Pad", new Vector3(cx + side * 2f, PlatformY + 0.02f, 0f), new Vector3(6f, 0.06f, 18f),
                     side < 0f ? MTeamAPad : MTeamBPad, false);
 

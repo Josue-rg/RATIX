@@ -83,6 +83,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);

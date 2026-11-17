@@ -193,6 +193,7 @@ namespace RATIX
             material.SetColor("_BaseColor", color);
             material.SetFloat("_Metallic", metallic);
             material.SetFloat("_Smoothness", smoothness);
+            material.enableInstancing = true;
 
             if (!string.IsNullOrEmpty(texturePath))
             {
@@ -223,6 +224,7 @@ namespace RATIX
 
             material.SetColor("_BaseColor", color);
             EditorUtility.SetDirty(material);
+            material.enableInstancing = true;
             return material;
         }
 
@@ -580,6 +582,104 @@ namespace RATIX
 
             scenes.Add(new EditorBuildSettingsScene(scenePath, true));
             EditorBuildSettings.scenes = scenes.ToArray();
+        }
+
+        // ------------------------------------------------------------------
+        // Pulido (remaster)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Pase de pulido para una escena ya montada: marca la geometría como
+        /// estática (batching), apaga la sombra de las piezas decorativas y deja
+        /// los materiales listos para instancing. No mueve nada.
+        /// </summary>
+        public static void Polish(Transform root)
+        {
+            if (root == null) return;
+
+            int statics = 0;
+            int noShadow = 0;
+
+            foreach (var renderer in root.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                var go = renderer.gameObject;
+
+                GameObjectUtility.SetStaticEditorFlags(go,
+                    StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccluderStatic | StaticEditorFlags.OccludeeStatic);
+                statics++;
+
+                // Sin collider = pieza decorativa: no necesita proyectar sombra.
+                if (go.GetComponent<Collider>() == null)
+                {
+                    renderer.shadowCastingMode = ShadowCastingMode.Off;
+                    renderer.receiveShadows = false;
+                    noShadow++;
+                }
+            }
+
+            Debug.Log("[RATIX] Pulido de '" + root.name + "': " + statics + " estáticos, " + noShadow + " sin sombra.");
+        }
+
+        /// <summary>
+        /// Busca pares de mallas cuyas caras horizontales coinciden (z-fighting).
+        /// Devuelve un informe de texto ordenado por superficie solapada.
+        /// </summary>
+        public static string AuditCoplanar(Transform root, int maxPairs = 20)
+        {
+            var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
+            var bounds = new Bounds[renderers.Length];
+            for (int i = 0; i < renderers.Length; i++) bounds[i] = renderers[i].bounds;
+
+            var hits = new List<(float area, string text)>();
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                for (int j = i + 1; j < renderers.Length; j++)
+                {
+                    var a = bounds[i];
+                    var b = bounds[j];
+
+                    float overlapX = Mathf.Min(a.max.x, b.max.x) - Mathf.Max(a.min.x, b.min.x);
+                    float overlapZ = Mathf.Min(a.max.z, b.max.z) - Mathf.Max(a.min.z, b.min.z);
+                    if (overlapX < 0.05f || overlapZ < 0.05f) continue;
+
+                    bool sameTop = Mathf.Abs(a.max.y - b.max.y) < 0.015f;
+                    bool sameBottom = Mathf.Abs(a.min.y - b.min.y) < 0.015f;
+                    if (!sameTop && !sameBottom) continue;
+
+                    float area = overlapX * overlapZ;
+                    if (area < 0.05f) continue;
+
+                    string text = renderers[i].name + "  <->  " + renderers[j].name +
+                                  "   (" + area.ToString("0.0") + " m², y=" + a.max.y.ToString("0.000") + ")";
+                    hits.Add((area, text));
+                }
+            }
+
+            hits.Sort((x, y) => y.area.CompareTo(x.area));
+
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("[RATIX] Solapes coplanares en '" + root.name + "': " + hits.Count);
+            for (int i = 0; i < Mathf.Min(maxPairs, hits.Count); i++) sb.AppendLine("  " + hits[i].text);
+            return sb.ToString();
+        }
+
+        [MenuItem("Tools/RATIX/Mapas/Remasterizar escena abierta", false, 900)]
+        public static void RemasterOpenScene()
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            var report = new System.Text.StringBuilder();
+
+            foreach (var go in scene.GetRootGameObjects())
+            {
+                if (go.name == "Player" || go.name == "HUD") continue;
+                Polish(go.transform);
+                report.Append(AuditCoplanar(go.transform));
+            }
+
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+            Debug.Log(report.ToString());
         }
 
         // ------------------------------------------------------------------

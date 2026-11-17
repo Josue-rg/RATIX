@@ -92,6 +92,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);
@@ -372,8 +374,8 @@ namespace RATIX
 
             Box(arena, "CapNorth", new Vector3(0f, WallH + 0.12f, HZ), new Vector3(HX * 2f + 2.6f, 0.24f, 1.7f), MStoneLight, false);
             Box(arena, "CapSouth", new Vector3(0f, WallH + 0.12f, -HZ), new Vector3(HX * 2f + 2.6f, 0.24f, 1.7f), MStoneLight, false);
-            Box(arena, "CapEast", new Vector3(HX, WallH + 0.12f, 0f), new Vector3(1.7f, 0.24f, HZ * 2f + 2.6f), MStoneLight, false);
-            Box(arena, "CapWest", new Vector3(-HX, WallH + 0.12f, 0f), new Vector3(1.7f, 0.24f, HZ * 2f + 2.6f), MStoneLight, false);
+            Box(arena, "CapEast", new Vector3(HX, WallH + 0.12f, 0f), new Vector3(1.7f, 0.24f, HZ * 2f - 3.4f), MStoneLight, false);
+            Box(arena, "CapWest", new Vector3(-HX, WallH + 0.12f, 0f), new Vector3(1.7f, 0.24f, HZ * 2f - 3.4f), MStoneLight, false);
 
             // Bastiones de esquina.
             for (int sx = -1; sx <= 1; sx += 2)
@@ -524,7 +526,7 @@ namespace RATIX
                 new RATIXMapKit.Opening(0f, 1.4f, 0.6f, 1.6f));
 
             // Techo transitable + peto (hueco en la esquina de la escalera).
-            Box(house, "Roof", new Vector3(0f, RoofTop - 0.15f, 0f), new Vector3(HouseWidth + 0.4f, 0.3f, HouseDepth + 0.4f), MStoneDark);
+            Box(house, "Roof", new Vector3(0f, RoofTop - 0.1f, 0f), new Vector3(HouseWidth + 0.4f, 0.3f, HouseDepth + 0.4f), MStoneDark);
             float py = RoofTop + 0.45f;
             WallAlongX(house, "ParapetN", halfD - 0.15f, -halfW + 0.2f, halfW - 0.2f, py, 0.9f, 0.3f, MStone);
             WallAlongX(house, "ParapetS", -halfD + 0.15f, -halfW + 0.2f, halfW - 0.2f, py, 0.9f, 0.3f, MStone,
@@ -547,8 +549,8 @@ namespace RATIX
 
             // Pavimento elevado 4 cm.
             Box(plaza, "Paving", new Vector3(0f, 0.02f, 0f), new Vector3(18f, 0.08f, 24f), MPaving, false);
-            Box(plaza, "PavingStripeN", new Vector3(0f, 0.07f, 9f), new Vector3(18f, 0.02f, 0.35f), MStoneDark, false);
-            Box(plaza, "PavingStripeS", new Vector3(0f, 0.07f, -9f), new Vector3(18f, 0.02f, 0.35f), MStoneDark, false);
+            Box(plaza, "PavingStripeN", new Vector3(0f, 0.09f, 9f), new Vector3(18f, 0.02f, 0.35f), MStoneDark, false);
+            Box(plaza, "PavingStripeS", new Vector3(0f, 0.09f, -9f), new Vector3(18f, 0.02f, 0.35f), MStoneDark, false);
 
             Instance(plaza, PWell, Vector3.zero, 0f, "Well");
 

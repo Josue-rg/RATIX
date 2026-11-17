@@ -81,6 +81,8 @@ namespace RATIX
             BuildProps(environment);
             BuildTargets(environment);
             BuildLighting(lighting);
+            RATIXMapKit.Polish(environment);
+            RATIXMapKit.Polish(lighting);
 
             MapDefinition definition = BuildGameplay(mapRoot);
             RATIXMapKit.SpawnPlayer(definition);
@@ -247,14 +249,14 @@ namespace RATIX
             // Vigas del techo.
             for (float z = -24f; z <= 24f; z += 8f)
             {
-                Box(shell, "BeamW" + z, new Vector3(-24.5f, CeilY - 0.15f, z), new Vector3(23f, 0.3f, 0.4f), MMetalDark, false);
-                Box(shell, "BeamE" + z, new Vector3(24.5f, CeilY - 0.15f, z), new Vector3(23f, 0.3f, 0.4f), MMetalDark, false);
+                Box(shell, "BeamW" + z, new Vector3(-24.5f, CeilY - 0.2f, z), new Vector3(23f, 0.3f, 0.4f), MMetalDark, false);
+                Box(shell, "BeamE" + z, new Vector3(24.5f, CeilY - 0.2f, z), new Vector3(23f, 0.3f, 0.4f), MMetalDark, false);
             }
 
             for (float x = -20f; x <= 20f; x += 8f)
             {
-                Box(shell, "BeamN" + x, new Vector3(x, CeilY - 0.15f, 20f), new Vector3(0.4f, 0.3f, 16f), MMetalDark, false);
-                Box(shell, "BeamS" + x, new Vector3(x, CeilY - 0.15f, -20f), new Vector3(0.4f, 0.3f, 16f), MMetalDark, false);
+                Box(shell, "BeamN" + x, new Vector3(x, CeilY - 0.2f, 20f), new Vector3(0.4f, 0.3f, 16f), MMetalDark, false);
+                Box(shell, "BeamS" + x, new Vector3(x, CeilY - 0.2f, -20f), new Vector3(0.4f, 0.3f, 16f), MMetalDark, false);
             }
 
             // Pilastras del perímetro.
@@ -286,8 +288,8 @@ namespace RATIX
             }
 
             // Anillo de paso elevado.
-            Box(hall, "CatwalkW", new Vector3(-11.4f, CatwalkTop - 0.15f, 0f), new Vector3(3.2f, 0.3f, 24f), MMetal);
-            Box(hall, "CatwalkE", new Vector3(11.4f, CatwalkTop - 0.15f, 0f), new Vector3(3.2f, 0.3f, 24f), MMetal);
+            Box(hall, "CatwalkW", new Vector3(-11.4f, CatwalkTop - 0.15f, 0f), new Vector3(3.2f, 0.3f, 17.6f), MMetal);
+            Box(hall, "CatwalkE", new Vector3(11.4f, CatwalkTop - 0.15f, 0f), new Vector3(3.2f, 0.3f, 17.6f), MMetal);
             Box(hall, "CatwalkN", new Vector3(0f, CatwalkTop - 0.15f, 10.4f), new Vector3(26f, 0.3f, 3.2f), MMetal);
             Box(hall, "CatwalkS", new Vector3(0f, CatwalkTop - 0.15f, -10.4f), new Vector3(26f, 0.3f, 3.2f), MMetal);
 
