@@ -413,6 +413,9 @@
   "profilemodal.window.stat4.label": "PLAYTIME",
   "profilemodal.window.stat5.label": "RANK",
   "profilemodal.window.xplabel": "XP TO NEXT LEVEL",
+  "profilemodal.window.googleaccount.label": "GOOGLE ACCOUNT",
+  "profilemodal.window.googleaccount.status": "Not linked",
+  "profilemodal.window.googleaccount.linkbutton.label": "LINK",
   "agendamodal.window.title": "AGENDA",
   "agendamodal.window.xbutton.label": "Close",
   "settingsmodal.window.title": "SETTINGS",
@@ -461,6 +464,9 @@
   "loginscreen.window.loginbutton.label": "LOG IN",
   "loginscreen.window.guestbutton.label": "PLAY AS GUEST",
   "loginscreen.window.registerbutton.label": "CREATE ACCOUNT",
+  "loginscreen.window.googlebutton.label": "CONTINUE WITH GOOGLE",
+  "confirmmodal.window.cancelbutton.label": "CANCEL",
+  "confirmmodal.window.confirmbutton.label": "CONFIRM",
   "splash.loading": "LOADING {0}%",
   "splash.ready": "READY",
   "hall.selected_none": "Selected: none",
@@ -473,5 +479,7 @@
   "value.evolution": "Evolution",
   "value.c4_groups": "C4 - groups",
   "value.war": "War",
-  "value.p_vs_p": "P vs P"
+  "value.p_vs_p": "P vs P",
+  "confirm.title": "ARE YOU SURE?",
+  "settings.confirm_apply": "Apply all settings changes?"
 }

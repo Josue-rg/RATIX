@@ -5,13 +5,16 @@ using UnityEngine.UI;
 namespace RATIX
 {
     /// <summary>
-    /// Selector de idioma del panel de Ajustes: alterna EN/ES y muestra el
-    /// idioma activo. El cambio es inmediato (sin recargar escena).
+    /// Selector de idioma del panel de Ajustes. No aplica el idioma al pulsar:
+    /// deja un valor pendiente que SettingsModalController aplica al confirmar.
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class LanguageSwitch : MonoBehaviour
     {
         [SerializeField] private TMP_Text label;
+
+        /// <summary>Idioma elegido, pendiente de aplicar con APPLY.</summary>
+        public string Pending { get; private set; }
 
         private void Awake()
         {
@@ -22,16 +25,7 @@ namespace RATIX
             }
         }
 
-        private void OnEnable()
-        {
-            L.LanguageChanged += Refresh;
-            Refresh();
-        }
-
-        private void OnDisable()
-        {
-            L.LanguageChanged -= Refresh;
-        }
+        private void OnEnable() => ResetPending();
 
         private void Start()
         {
@@ -41,14 +35,27 @@ namespace RATIX
                 button.onClick.RemoveListener(Toggle);
                 button.onClick.AddListener(Toggle);
             }
+
+            Refresh();
         }
 
-        public void Toggle() => L.Toggle();
+        /// <summary>Vuelve al idioma aplicado actualmente.</summary>
+        public void ResetPending()
+        {
+            Pending = L.Current;
+            Refresh();
+        }
 
-        public void Refresh()
+        public void Toggle()
+        {
+            Pending = Pending == "es" ? "en" : "es";
+            Refresh();
+        }
+
+        private void Refresh()
         {
             if (label == null) return;
-            label.text = L.Current == "es" ? "ESPAÑOL" : "ENGLISH";
+            label.text = Pending == "es" ? "ESPAÑOL" : "ENGLISH";
         }
     }
 }

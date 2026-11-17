@@ -48,7 +48,13 @@ armas y diferentes cosas.
 - TextMeshPro importado (fuente por defecto LiberationSans).
 - **Entrada del juego**: `SplashScreen` (logo RATIX + barra, 3.5 s) → `LoginScreen`
   → lobby. Lo controla `AppFlowController` en `LobbyCanvas`; el login es visual
-  (sin servidor) y avisa con el evento `LoggedIn`.
+  (sin servidor) y avisa con el evento `LoggedIn`. Incluye botón
+  **Continue with Google** (visual, sin configurar) y en Perfil una tarjeta para
+  **vincular la cuenta de Google**.
+- **Agenda**: calendario real con el mes y el día actuales (`AgendaCalendar`),
+  marca el día de hoy y se adapta a 4, 5 o 6 semanas.
+- **Ajustes**: los cambios (incluido el idioma) no se aplican al pulsar; al dar
+  **APPLY** se abre `ConfirmModal` y solo al confirmar se aplican.
 
 ---
 
@@ -183,6 +189,7 @@ Canvas de referencia 1920 × 1080, ancla y pivot `0,0`:
 | `InviteReceivedModal` | `0, −880` (se abre en `0, 77`) |
 | `SplashScreen` | `0, 3320` (se muestra a pantalla completa al iniciar) |
 | `LoginScreen` | `0, 5560` (se muestra después del splash) |
+| `ConfirmModal` | `0, 4440` (mini modal de confirmación reutilizable) |
 | `ZombieModePanel` | `1546, 0` |
 | `ShooterModePanel` | `3557, 0` |
 | `AdventureModePanel` | `5565, 0` |

@@ -260,6 +260,12 @@ namespace RATIX.EditorTools
             { "LOG IN", "INICIAR SESIÓN" },
             { "PLAY AS GUEST", "JUGAR COMO INVITADO" },
             { "CREATE ACCOUNT", "CREAR CUENTA" },
+            { "CONTINUE WITH GOOGLE", "CONTINUAR CON GOOGLE" },
+            { "GOOGLE ACCOUNT", "CUENTA DE GOOGLE" },
+            { "Not linked", "No vinculada" },
+            { "LINK", "VINCULAR" },
+            { "CANCEL", "CANCELAR" },
+            { "CONFIRM", "CONFIRMAR" },
             { "SURVIVE  ·  FIGHT  ·  PROGRESS", "SOBREVIVE  ·  LUCHA  ·  PROGRESA" },
 
             // Chat / friends
@@ -297,7 +303,9 @@ namespace RATIX.EditorTools
             { "value.evolution", ("Evolution", "Evolución") },
             { "value.c4_groups", ("C4 - groups", "C4 - grupos") },
             { "value.war", ("War", "Guerra") },
-            { "value.p_vs_p", ("P vs P", "P vs P") }
+            { "value.p_vs_p", ("P vs P", "P vs P") },
+            { "confirm.title", ("ARE YOU SURE?", "¿ESTÁS SEGURO?") },
+            { "settings.confirm_apply", ("Apply all settings changes?", "¿Aplicar todos los cambios de ajustes?") }
         };
 
         [MenuItem("RATIX/Localización/1. Generar claves", false, 40)]
@@ -344,27 +352,23 @@ namespace RATIX.EditorTools
                 if (path == "SettingsModal/Window/LanguageChip/Label") continue;
 
                 var localizer = text.GetComponent<TextLocalizer>();
-                string key;
+                bool hadLocalizer = localizer != null;
 
-                if (localizer != null)
-                {
-                    key = localizer.Key;
-                    if (string.IsNullOrEmpty(key)) key = Unique(Normalize(path), used);
-                }
-                else
-                {
-                    if (!Spanish.TryGetValue(text.text, out var spanish)) continue;
+                if (!hadLocalizer && !Spanish.ContainsKey(text.text)) continue;
 
-                    key = Unique(Normalize(path), used);
+                // Clave determinista por ruta: evita que un clon herede la clave del original.
+                string key = Unique(Normalize(path), used);
+
+                if (!hadLocalizer)
+                {
                     localizer = text.gameObject.AddComponent<TextLocalizer>();
-
-                    var so = new SerializedObject(localizer);
-                    so.FindProperty("key").stringValue = key;
-                    so.FindProperty("target").objectReferenceValue = text;
-                    so.ApplyModifiedPropertiesWithoutUndo();
-
                     added++;
                 }
+
+                var so = new SerializedObject(localizer);
+                so.FindProperty("key").stringValue = key;
+                so.FindProperty("target").objectReferenceValue = text;
+                so.ApplyModifiedPropertiesWithoutUndo();
 
                 used.Add(key);
                 en[key] = text.text;

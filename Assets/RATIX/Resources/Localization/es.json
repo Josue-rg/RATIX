@@ -413,6 +413,9 @@
   "profilemodal.window.stat4.label": "TIEMPO DE JUEGO",
   "profilemodal.window.stat5.label": "RANGO",
   "profilemodal.window.xplabel": "XP PARA EL SIGUIENTE NIVEL",
+  "profilemodal.window.googleaccount.label": "CUENTA DE GOOGLE",
+  "profilemodal.window.googleaccount.status": "No vinculada",
+  "profilemodal.window.googleaccount.linkbutton.label": "VINCULAR",
   "agendamodal.window.title": "AGENDA",
   "agendamodal.window.xbutton.label": "Cerrar",
   "settingsmodal.window.title": "AJUSTES",
@@ -461,6 +464,9 @@
   "loginscreen.window.loginbutton.label": "INICIAR SESIÓN",
   "loginscreen.window.guestbutton.label": "JUGAR COMO INVITADO",
   "loginscreen.window.registerbutton.label": "CREAR CUENTA",
+  "loginscreen.window.googlebutton.label": "CONTINUAR CON GOOGLE",
+  "confirmmodal.window.cancelbutton.label": "CANCELAR",
+  "confirmmodal.window.confirmbutton.label": "CONFIRMAR",
   "splash.loading": "CARGANDO {0}%",
   "splash.ready": "LISTO",
   "hall.selected_none": "Seleccionado: ninguno",
@@ -473,5 +479,7 @@
   "value.evolution": "Evolución",
   "value.c4_groups": "C4 - grupos",
   "value.war": "Guerra",
-  "value.p_vs_p": "P vs P"
+  "value.p_vs_p": "P vs P",
+  "confirm.title": "¿ESTÁS SEGURO?",
+  "settings.confirm_apply": "¿Aplicar todos los cambios de ajustes?"
 }
