@@ -21,6 +21,14 @@ namespace RATIX
         [SerializeField] private string[] selectionNames;
 
         private int index;
+
+        /// <summary>Índice de la tarjeta que está al frente.</summary>
+        public int SelectedIndex => index;
+
+        /// <summary>Nombre de la tarjeta seleccionada (vacío si no hay).</summary>
+        public string SelectedName =>
+            selectionNames != null && index >= 0 && index < selectionNames.Length ? selectionNames[index] : string.Empty;
+
         private Image[] rings;
 
         private void Awake()
@@ -127,7 +135,7 @@ namespace RATIX
         }
 
         /// <summary>Clave de traducción para nombres de modo/mapa del carrusel.</summary>
-        private static string ValueKey(string value)
+        public static string ValueKey(string value)
         {
             var sb = new StringBuilder();
             bool lastWasSeparator = false;

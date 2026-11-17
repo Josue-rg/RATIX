@@ -67,6 +67,12 @@ namespace RATIX
         [FormerlySerializedAs("ajustesButton")]
         [SerializeField] private Button settingsButton;
 
+        [Header("Mapas")]
+        [SerializeField] private MapLauncher zombieCreateLauncher;
+        [SerializeField] private MapLauncher shooterCreateLauncher;
+        [SerializeField] private MapLauncher zombieHallLauncher;
+        [SerializeField] private MapLauncher shooterHallLauncher;
+
         /// <summary>Pantalla de contenido activa y pila para que "Back" vuelva al origen.</summary>
         private readonly System.Collections.Generic.List<RectTransform> contentHistory = new System.Collections.Generic.List<RectTransform>();
         private RectTransform currentContent;
@@ -139,10 +145,14 @@ namespace RATIX
             // Hall actions.
             WireByPath(zombieHallRect, "RoomList/ActionBar/Kick", OpenKick);
             WireByPath(zombieHallRect, "RoomList/ActionBar/Invite", OpenInvite);
-            WireByPath(zombieHallRect, "RoomList/ActionBar/EnterRoom", EnterMatch);
+            WireByPath(zombieHallRect, "RoomList/ActionBar/EnterRoom", () => Launch(zombieHallLauncher));
             WireByPath(shooterHallRect, "RoomList/ActionBar/Kick", OpenKick);
             WireByPath(shooterHallRect, "RoomList/ActionBar/Invite", OpenInvite);
-            WireByPath(shooterHallRect, "RoomList/ActionBar/EnterRoom", EnterMatch);
+            WireByPath(shooterHallRect, "RoomList/ActionBar/EnterRoom", () => Launch(shooterHallLauncher));
+
+            // Crear sala -> carga el mapa elegido (con pantalla de carga).
+            WireByPath(zombieModeRect, "CreateRoomPanel/Join", () => Launch(zombieCreateLauncher));
+            WireByPath(shooterModeRect, "CreateRoomPanel/Join", () => Launch(shooterCreateLauncher));
 
             // Reposition dispersed panels.
             var panels = new[] { modeSelectRect, zombieModeRect, shooterModeRect, adventureModeRect, zombieHallRect, shooterHallRect, storePanel, warehousePanel, charactersPanel };
@@ -196,6 +206,11 @@ namespace RATIX
             if (storePanel == null) storePanel = FindRect("Content/StoreModelPanel") ?? FindRect("Content/StoreModalPanel");
             if (warehousePanel == null) warehousePanel = FindRect("Content/WarehouseModelPanel") ?? FindRect("Content/WarehouseModalPanel");
             if (inviteReceivedModal == null) inviteReceivedModal = FindComponent<InviteReceivedModal>("InviteReceivedModal");
+
+            if (zombieCreateLauncher == null) zombieCreateLauncher = FindComponent<MapLauncher>("Content/ZombieModePanel/CreateRoomPanel");
+            if (shooterCreateLauncher == null) shooterCreateLauncher = FindComponent<MapLauncher>("Content/ShooterModePanel/CreateRoomPanel");
+            if (zombieHallLauncher == null) zombieHallLauncher = FindComponent<MapLauncher>("Content/ZombieHallModelPanel/SettingsPanel");
+            if (shooterHallLauncher == null) shooterHallLauncher = FindComponent<MapLauncher>("Content/ShooterHallModelPanel/SettingsPanel");
         }
 
         private T FindComponent<T>(string path) where T : Component
@@ -311,6 +326,12 @@ namespace RATIX
         }
 
         public void EnterMatch() => Log("Starting match... (gameplay scene not implemented yet)");
+
+        /// <summary>Lanza el mapa elegido con la pantalla de carga.</summary>
+        private void Launch(MapLauncher launcher)
+        {
+            if (launcher != null) launcher.Launch();
+        }
 
         /// <summary>
         /// Muestra el popup de invitación recibida (misma posición que el correo).

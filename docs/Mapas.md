@@ -278,9 +278,27 @@ Menú **`RATIX ▸ Mapas`**:
 Cada prop son 6-15 cubos (menos de 1.000 triángulos). Un LOD no ahorraría nada y
 duplicaría assets; el batching y la oclusión ya lo cubren.
 
+### Flujo de partida (temporal)
+
+Mientras no exista la lógica de salas, el lobby ya lleva al mapa:
+
+1. En **Crear sala** (Zombi o Shooter) el carrusel muestra los **4 mapas de ese
+   modo**, con miniatura y nombre.
+2. **CREAR** (o **ENTRAR** en el hall) abre la **pantalla de carga**: RATIX,
+   `LOADING`, el nombre del mapa y una barra de progreso.
+3. La escena se carga en segundo plano y se activa al terminar (mínimo 1,4 s
+   para que no parpadee).
+
+Las miniaturas se regeneran con **`RATIX ▸ UI ▸ Instalar selección de mapas`**
+(crea `Assets/RATIX/UI/MapThumbs` y configura los cuatro carruseles: crear sala y
+ajustes del hall, Zombi y Shooter).
+
+> La build web ya incluye todas las escenas de Build Settings, no solo el lobby,
+> para que este flujo funcione publicado.
+
 ---
 
-## 7. Pendiente
+## 8. Pendiente
 
 - **Lógica del modo Zombi** (infección, rondas, contagio) y enlazar los mapas al
   carrusel de *Crear sala*.

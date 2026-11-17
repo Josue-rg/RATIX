@@ -488,6 +488,13 @@
   "value.metro9": "Metro Line 9",
   "value.ship_aurora": "Cargo Ship Aurora",
   "value.temple_mist": "Temple of Mist",
+  "value.pier_7": "Pier 7",
+  "value.metro_line_9": "Metro Line 9",
+  "value.bunker_k_9": "Bunker K-9",
+  "value.hacienda_el_alba": "Hacienda El Alba",
+  "value.cargo_ship_aurora": "Cargo Ship Aurora",
+  "value.temple_of_mist": "Temple of Mist",
+  "loading.title": "LOADING",
   "confirm.title": "ARE YOU SURE?",
   "settings.confirm_apply": "Apply all settings changes?"
 }

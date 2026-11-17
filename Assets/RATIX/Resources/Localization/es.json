@@ -488,6 +488,13 @@
   "value.metro9": "Metro Línea 9",
   "value.ship_aurora": "Carguero Aurora",
   "value.temple_mist": "Templo de la Niebla",
+  "value.pier_7": "Muelle 7",
+  "value.metro_line_9": "Metro Línea 9",
+  "value.bunker_k_9": "Búnker K-9",
+  "value.hacienda_el_alba": "Hacienda El Alba",
+  "value.cargo_ship_aurora": "Carguero Aurora",
+  "value.temple_of_mist": "Templo de la Niebla",
+  "loading.title": "CARGANDO",
   "confirm.title": "¿ESTÁS SEGURO?",
   "settings.confirm_apply": "¿Aplicar todos los cambios de ajustes?"
 }

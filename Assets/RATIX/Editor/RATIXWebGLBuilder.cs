@@ -49,13 +49,18 @@ namespace RATIX.EditorTools
             // en 1920x1080 px y lo recorta en pantallas pequeñas.
             PlayerSettings.WebGL.template = "PROJECT:RATIX";
 
-            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(LobbyScene, true) };
+            // El lobby carga los mapas por nombre, así que la build incluye todas
+            // las escenas habilitadas en Build Settings (lobby + mapas).
+            var buildScenes = new System.Collections.Generic.List<string>();
+            foreach (var scene in EditorBuildSettings.scenes)
+                if (scene.enabled) buildScenes.Add(scene.path);
+            if (buildScenes.Count == 0) buildScenes.Add(LobbyScene);
 
             if (Directory.Exists(TempBuild)) Directory.Delete(TempBuild, true);
 
             var options = new BuildPlayerOptions
             {
-                scenes = new[] { LobbyScene },
+                scenes = buildScenes.ToArray(),
                 locationPathName = TempBuild,
                 target = BuildTarget.WebGL,
                 options = BuildOptions.None,
