@@ -246,22 +246,45 @@ Occlusion culling horneado en los mapas cerrados: **Búnker 30 KB · Metro 16 KB
 Kasbah 53 KB · Carguero 26 KB**. Los mapas abiertos (Foundry, Muelle 7,
 Hacienda, Templo) no lo necesitan: no hay nada grande que tape la vista.
 
-### Lo que no se horneó (y por qué)
+### Iluminación horneada
 
-- **Lightmaps:** las primitivas comparten las UV de luz entre caras (cada cara
-  usa 0..1), así que un bake sangraría la luz de una pared a otra. Para hornear
-  hace falta malla propia con UV2 por prop.
-- **LODs:** cada prop son 6-15 cubos (menos de 1.000 triángulos). El ahorro sería
-  nulo y duplicaría assets; el batching ya los agrupa.
+Los ocho mapas tienen **luz horneada** (GI) además de la luz en tiempo real:
+
+| Pieza | Qué hace |
+|---|---|
+| Mallas `Cube_LM`, `Cylinder_LM`, `Sphere_LM` | Copias de las primitivas con **UV2 propia** (sin solapes), guardadas en `Maps/Shared/Meshes` |
+| `ContributeGI` en toda la geometría | La escena entra en el horneado |
+| Sol en **Realtime** | Mantiene sombras nítidas y especulares en movimiento |
+| Luces de interior en **Baked** | Las lámparas/fuegos se hornean y dejan de costar por frame |
+| **Light probes** (9 × 3 × 7) | El jugador y el arma reciben la luz indirecta del sitio |
+| `LightingSettings` por mapa | En `Maps/Shared/Lighting`, resolución 4 y atlas de 512 px |
+
+Resultado: **2-4 lightmaps por mapa, 4-6 MB cada uno** (≈ 39 MB en total). El
+aspecto gana rebote de luz y las lámparas dejan de ser luces en tiempo real.
+
+Menú **`RATIX ▸ Mapas`**:
+
+| Opción | Qué hace |
+|---|---|
+| **Preparar luz horneada (escena abierta)** | Asigna mallas con UV2, marca GI, ajusta luces, crea probes y el ajuste de luz |
+| **Hornear luz (escena abierta)** | Lanza el horneado (progresivo GPU) |
+| **Cancelar horneado** | Lo detiene |
+
+> ⚠️ **Reconstruir un mapa borra su horneado.** Después de `Construir mapa…`,
+> vuelve a ejecutar **Preparar** y **Hornear** en esa escena.
+
+### Lo que sigue sin LODs
+
+Cada prop son 6-15 cubos (menos de 1.000 triángulos). Un LOD no ahorraría nada y
+duplicaría assets; el batching y la oclusión ya lo cubren.
 
 ---
 
-## 8. Pendiente
+## 7. Pendiente
 
 - **Lógica del modo Zombi** (infección, rondas, contagio) y enlazar los mapas al
   carrusel de *Crear sala*.
 - NavMesh para bots e infectados controlados por la IA.
 - Recogidas de munición / vida (necesitan UI con ID de localización).
 - Sonido de disparo y ambiente propio de cada mapa (mar, metro, selva).
-- Iluminación horneada (lightmaps y light probes) cuando el arte sea definitivo.
 - Vestir los mapas con arte definitivo (props con curvas, telas, vegetación real).
