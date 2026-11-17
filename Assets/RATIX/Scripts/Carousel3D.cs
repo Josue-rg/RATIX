@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,6 +43,16 @@ namespace RATIX
         private void Start()
         {
             Snap();
+        }
+
+        private void OnEnable()
+        {
+            L.LanguageChanged += UpdateSelectionLabel;
+        }
+
+        private void OnDisable()
+        {
+            L.LanguageChanged -= UpdateSelectionLabel;
         }
 
         private void WireClicks()
@@ -110,7 +121,32 @@ namespace RATIX
         {
             if (selectionLabel == null || selectionNames == null) return;
             if (index < 0 || index >= selectionNames.Length) return;
-            selectionLabel.text = selectionNames[index];
+
+            string name = selectionNames[index];
+            selectionLabel.text = L.Get(ValueKey(name), name);
+        }
+
+        /// <summary>Clave de traducción para nombres de modo/mapa del carrusel.</summary>
+        private static string ValueKey(string value)
+        {
+            var sb = new StringBuilder();
+            bool lastWasSeparator = false;
+
+            foreach (char c in (value ?? string.Empty).ToLowerInvariant())
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    sb.Append(c);
+                    lastWasSeparator = false;
+                }
+                else if (!lastWasSeparator)
+                {
+                    sb.Append('_');
+                    lastWasSeparator = true;
+                }
+            }
+
+            return "value." + sb.ToString().Trim('_');
         }
 
         private int Wrap(int d)

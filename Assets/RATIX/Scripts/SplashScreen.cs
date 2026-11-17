@@ -69,13 +69,13 @@ namespace RATIX
 
                 if (progressFill != null) Fill(progress);
                 if (statusLabel != null)
-                    statusLabel.text = "LOADING " + Mathf.RoundToInt(progress * 100f) + "%";
+                    statusLabel.text = L.Format("splash.loading", Mathf.RoundToInt(progress * 100f));
 
                 yield return null;
             }
 
             if (progressFill != null) Fill(1f);
-            if (statusLabel != null) statusLabel.text = "READY";
+            if (statusLabel != null) statusLabel.text = L.Get("splash.ready", "READY");
 
             routine = null;
             Finished?.Invoke();

@@ -1,7 +1,7 @@
 # Localización (idiomas)
 
-> **Estado:** propuesta aprobada, **pendiente de implementación**. Este documento
-> es la especificación exacta. No se implementa todavía.
+> **Estado:** Fase 1 implementada (**EN/ES**, cambio instantáneo desde Ajustes).
+> Fases 2 y 3 pendientes.
 
 Objetivo: cambiar de idioma **al instante**, sin recargar la escena y sin depender
 del texto literal. El texto visible se identifica con un **ID estable** y cada
@@ -133,8 +133,8 @@ Apply()   → target.text = L.Get(key, target.text);
 ## 7. Selector de idioma
 
 - Va dentro del `SettingsModal` existente (no se crea pantalla nueva).
-- Fila `LANGUAGE` con dos botones: `EN` | `ES`.
-- Al pulsar: `L.SetLanguage(code)`. El botón activo se marca con el acento.
+- Fila `LANGUAGE` con el chip `LanguageChip`: muestra `ENGLISH` / `ESPAÑOL` y
+  alterna con un clic (`LanguageSwitch` → `L.Toggle()`).
 - No reinicia el juego, no recarga escena, no pierde estado.
 
 ---
@@ -195,8 +195,7 @@ Antes de dar algo por terminado:
 
 ## 11. Fases
 
-1. Servicio + JSON + `TextLocalizer` + selector en Ajustes (sin recarga).
-2. Herramienta de editor (analizar / generar / exportar / faltantes).
-3. Traducción completa de `es.json` y QA de ambos idiomas.
-
-**Estado actual: ninguna fase implementada.**
+1. ✅ Servicio + JSON + `TextLocalizer` + selector en Ajustes (sin recarga).
+2. ⏳ Herramienta de editor (analizar / generar / exportar / faltantes).
+   - Ya existen `RATIX ▸ Localización ▸ 1. Generar claves` y `2. Ver faltantes`.
+3. ✅ Traducción EN/ES de los textos estáticos; pendiente QA de pantallas nuevas.

@@ -95,7 +95,7 @@ namespace RATIX
 
             if (string.IsNullOrEmpty(user))
             {
-                SetError("Enter your username to continue.");
+                SetError(L.Get("login.error_user", "Enter your username to continue."));
                 return;
             }
 

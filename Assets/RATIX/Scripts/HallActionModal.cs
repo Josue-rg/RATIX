@@ -90,18 +90,17 @@ namespace RATIX
 
             if (_selected.Count == 0)
             {
-                selectedLabel.text = "Selected: none";
+                selectedLabel.text = L.Get("hall.selected_none", "Selected: none");
                 return;
             }
 
             if (_selected.Count == 1)
             {
-                selectedLabel.text = "Selected: " + ReadName(_selected[0]);
+                selectedLabel.text = L.Format("hall.selected_one", ReadName(_selected[0]));
                 return;
             }
 
-            string noun = IsInvite ? "friends" : "players";
-            selectedLabel.text = "Selected: " + _selected.Count + " " + noun;
+            selectedLabel.text = L.Format(IsInvite ? "hall.selected_friends" : "hall.selected_players", _selected.Count);
         }
 
         private bool IsInvite =>
